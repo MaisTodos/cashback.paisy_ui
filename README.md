@@ -2,6 +2,8 @@
 
 A simple, extensible DaisyUI HTML renderer built on top of `bs4` — directly from Python.
 
+![demo](./demo.png)
+
 ## ✨ Why PaisyUI?
 
 `paisy_ui` is a lightweight `42.6 kb` Python package powered by `BeautifulSoup` (`bs4`) that allows you to stop worrying about HTML templates and templating engines. By leveraging the beautiful [DaisyUI](https://daisyui.com) CSS framework, it makes UI building smoother and more intuitive.
