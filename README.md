@@ -18,7 +18,7 @@ PaisyUI offers:
 
 ---
 
-## 📦 Installation
+## ⬇️ Installation
 
 ```bash
 pip install paisy_ui
@@ -66,7 +66,7 @@ print(foo.prettify())
 
 ---
 
-### BaseComponents Example
+### 📦 BaseComponents Example
 
 You can use `BaseComponents` to create custom HTML structures or extend them to define components with custom behavior:
 
@@ -96,27 +96,29 @@ print(page.prettify())
 
 ---
 
-### DaisyUI Example
+### 🌻 DaisyUI Example
 
-DaisyUI components provide convenient abstractions for complex structures:
+`DaisyUI` components provide convenient abstractions for complex structures:
+
+> *It also automatically imports [DaisyUI](https://daisyui.com/) and [Google Material Symbols](https://fonts.google.com/icons?icon.query=unk) using `CDN`.*
 
 ```python
 from paisy_ui import DaisyUI
 
-modal = DaisyUI.Modal(id="myModal")(
-    DaisyUI.Title().primary()("Modal Title"),
-    DaisyUI.Text()("Modal content")
-)
-
-alert = DaisyUI.Alert(symbol="done_all").success()("Everything ok!")
-
 page = DaisyUI.HTML()(
     DaisyUI.LayoutNavbar(
         title="Test",
-        menu_items=menu_items,
+        menu_items=[
+            DaisyUI.LayoutNavbar.MenuItem(label="Home", href="/home", symbol="home"),
+            DaisyUI.LayoutNavbar.MenuItem(label="Users", href="/users", symbol="groups"),
+            DaisyUI.LayoutNavbar.MenuItem(label="Tasks", href="/tasks", symbol="done_all"),
+        ],
     )(
-        modal,
-        alert,
+        DaisyUI.Modal(id="myModal")(
+            DaisyUI.Title().primary()("Modal Title"),
+            DaisyUI.Text()("Modal content")
+        ),
+        DaisyUI.Alert(symbol="done_all").success()("Everything ok!"),
         DaisyUI.Card()(
             DaisyUI.Title()("Card Title"),
             DaisyUI.Text()("Card Content"),

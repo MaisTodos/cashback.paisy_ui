@@ -1,4 +1,4 @@
-from daisy_ui import DaisyUI
+from paisy_ui import DaisyUI
 
 if __name__ == "__main__":
     menu_items = [

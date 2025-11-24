@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Optional
+from typing import Optional
 
 from bs4 import BeautifulSoup, Tag
 
