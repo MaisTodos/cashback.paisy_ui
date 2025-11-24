@@ -53,6 +53,12 @@ class BaseComponent(Tag):
         return self
 
 
+class SelfClosingBaseComponent(BaseComponent):
+    @property
+    def is_empty_element(self) -> bool:
+        return True
+
+
 class WrapperComponent(BaseComponent):
     wrapper: BaseComponent
 

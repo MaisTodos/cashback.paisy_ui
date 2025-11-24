@@ -1,4 +1,4 @@
-from .core import BaseComponent
+from .core import BaseComponent, SelfClosingBaseComponent
 
 
 class BaseComponents:
@@ -13,8 +13,8 @@ class BaseComponents:
     class Script(BaseComponent):
         """<script></script>"""
 
-    class Link(BaseComponent):
-        """<link></link>"""
+    class Link(SelfClosingBaseComponent):
+        """<link/>"""
 
     class Body(BaseComponent):
         """<body></body>"""
@@ -49,8 +49,8 @@ class BaseComponents:
     class Ul(BaseComponent):
         """<ul></ul>"""
 
-    class Input(BaseComponent):
-        """<input></input>"""
+    class Input(SelfClosingBaseComponent):
+        """<input/>"""
 
     class Legend(BaseComponent):
         """<legend></legend>"""

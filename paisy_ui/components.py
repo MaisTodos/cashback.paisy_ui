@@ -245,6 +245,8 @@ class DaisyUI:
     class NavBar(BaseComponent):
         """A simple navbar"""
 
+        tag_name = "nav"
+
         @property
         def title(self) -> Optional[str]:
             attr = self.attrs_pop("title", None)

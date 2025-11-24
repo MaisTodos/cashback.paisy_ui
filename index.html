@@ -1,18 +1,15 @@
 <html>
  <head>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
-  </link>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" type="text/css">
-  </link>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" type="text/css"/>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
   </script>
  </head>
  <body>
   <main class="drawer">
-   <input class="drawer-toggle" id="drawer-toggle" type="checkbox">
-   </input>
+   <input class="drawer-toggle" id="drawer-toggle" type="checkbox"/>
    <div class="drawer-content flex flex-col">
-    <navbar class="navbar bg-base-300 w-full">
+    <nav class="navbar bg-base-300 w-full">
      <div class="flex-none lg:hidden">
       <label class="btn btn-square btn-ghost" for="drawer-toggle">
        <span class="material-symbols-outlined" symbol="menu">
@@ -30,6 +27,14 @@
          home
         </span>
         Home
+       </a>
+      </li>
+      <li class="text-base">
+       <a href="/tasks">
+        <span class="material-symbols-outlined" symbol="done_all">
+         done_all
+        </span>
+        Tasks
        </a>
       </li>
       <li class="text-base">
@@ -89,14 +94,6 @@
        </details>
       </li>
       <li class="text-base">
-       <a href="/tasks">
-        <span class="material-symbols-outlined" symbol="done_all">
-         done_all
-        </span>
-        Tasks
-       </a>
-      </li>
-      <li class="text-base">
        <details>
         <summary>
          <span class="material-symbols-outlined" symbol="account_circle">
@@ -125,7 +122,7 @@
        </details>
       </li>
      </ul>
-    </navbar>
+    </nav>
     <div class="p-4 flex flex-col gap-4">
      <dialog class="modal" id="modalLogout">
       <div class="modal-box">
@@ -277,8 +274,7 @@
            <span class="text-sm opacity-50 material-symbols-outlined" symbol="signature">
             signature
            </span>
-           <input class="grow" help="Preencha com seu nome completo" id="nome" name="nome" placeholder="Zé da Silva" type="text">
-           </input>
+           <input class="grow" help="Preencha com seu nome completo" id="nome" name="nome" placeholder="Zé da Silva" type="text"/>
           </label>
           <p class="label">
            Preencha com seu nome completo
@@ -292,8 +288,7 @@
            <span class="text-sm opacity-50 material-symbols-outlined" symbol="email">
             email
            </span>
-           <input class="grow" help="Preencha com seu e-mail" id="email" name="email" placeholder="email@dominio.com" type="email">
-           </input>
+           <input class="grow" help="Preencha com seu e-mail" id="email" name="email" placeholder="email@dominio.com" type="email"/>
           </label>
           <p class="label">
            Preencha com seu e-mail
@@ -307,8 +302,7 @@
            <span class="text-sm opacity-50 material-symbols-outlined" symbol="cake">
             cake
            </span>
-           <input class="grow" help="Preencha com sua data de nascimento" id="idade" name="idade" placeholder="10/10/1990" type="date">
-           </input>
+           <input class="grow" help="Preencha com sua data de nascimento" id="idade" name="idade" placeholder="10/10/1990" type="date"/>
           </label>
           <p class="label">
            Preencha com sua data de nascimento
@@ -336,6 +330,14 @@
         home
        </span>
        Home
+      </a>
+     </li>
+     <li class="text-base">
+      <a href="/tasks">
+       <span class="material-symbols-outlined" symbol="done_all">
+        done_all
+       </span>
+       Tasks
       </a>
      </li>
      <li class="text-base">
@@ -393,14 +395,6 @@
         </li>
        </ul>
       </details>
-     </li>
-     <li class="text-base">
-      <a href="/tasks">
-       <span class="material-symbols-outlined" symbol="done_all">
-        done_all
-       </span>
-       Tasks
-      </a>
      </li>
      <li class="text-base">
       <details>
