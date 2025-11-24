@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from .base import BaseComponents
 from .core import BaseComponent, WrapperComponent
@@ -11,6 +11,8 @@ CDN_TAILWIND = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
 
 class DaisyUI:
     """DaisyUI Components, check the [full documentation](https://daisyui.com)"""
+
+    class Symbol(BaseComponents.Symbol): ...
 
     class HTML(WrapperComponent):
         """Base HTML with DaisyUI, Tailwind and Material Symbols Outlined CDNs"""
@@ -62,10 +64,13 @@ class DaisyUI:
             return self.css(f"{self.base_class}-accent")
 
     class Text(VariantComponent):
-        """<p class="text"></p>"""
+        """<p class="text flex flex-row gap-2 items-center"></p>"""
 
         tag_name = "p"
         base_class = "text"
+
+        def _build(self):
+            self.css("text", "flex", "flex-row", "gap-2", "items-center")
 
     class Title(VariantComponent):
         """<h5 class="text-lg font-bold"></h5>"""
@@ -117,6 +122,51 @@ class DaisyUI:
 
             if self.help:
                 self.append(BaseComponents.P("label")(str(self.help)))
+
+    class Table(BaseComponents.Div):
+        """A complete table"""
+
+        tag_name = "div"
+
+        @property
+        def collumns(self) -> List[Union[BaseComponent, str]]:
+            attr = self.attrs_pop("collumns", None)
+            if not isinstance(attr, list):
+                raise ValueError("Table collumns must be a List[str]")
+            return attr
+
+        @property
+        def rows(self) -> List[List[Union[BaseComponent, str]]]:
+            attr = self.attrs_pop("rows", None)
+            if not isinstance(attr, list):
+                raise ValueError("Table rows must be a List[List[str]]")
+            if not isinstance(attr[0], list):
+                raise ValueError("Table rows must be a List[List[str]]")
+            return attr
+
+        def _build(self):
+            self.css("overflow-x-auto")
+            table = BaseComponents.Table("table")(
+                BaseComponents.THead()(
+                    BaseComponents.TR()(
+                        *[BaseComponents.TH()(col) for col in self.collumns]
+                    )
+                ),
+                BaseComponents.TBody()(
+                    *[
+                        BaseComponents.TR()(
+                            *[
+                                BaseComponents.TD()(
+                                    col if isinstance(col, BaseComponent) else str(col)
+                                )
+                                for col in row
+                            ]
+                        )
+                        for row in self.rows
+                    ]
+                ),
+            )
+            self.append(table)
 
     class Button(VariantComponent):
         """<button class="btn"></button>"""
@@ -219,12 +269,12 @@ class DaisyUI:
                 )
 
     class LayoutGrid(BaseComponent):
-        """<div class="grid grid-cols-3 gap-4"></div>"""
+        """<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>"""
 
         tag_name = "div"
 
         def _build(self):
-            self.css("grid", "grid-cols-3", "gap-4")
+            self.css("grid", "md:grid-cols-2", "lg:grid-cols-3", "gap-4")
 
     class LayoutNavbar(WrapperComponent):
         """A complete responsive layout with a navbar and a sidebar for small screens"""
@@ -234,8 +284,43 @@ class DaisyUI:
         @dataclass
         class MenuItem:
             label: str
-            href: str
+            href: Optional[str] = None
+            onclick: Optional[str] = None
             symbol: Optional[str] = "expand_circle_right"
+            subitems: Optional[List["DaisyUI.LayoutNavbar.MenuItem"]] = None
+            variant: Optional[str] = "base"
+
+            def to_component(self, *classnames) -> BaseComponents.Li:
+
+                if not self.subitems:
+                    component = BaseComponents.Li(f"text-{self.variant}")(
+                        BaseComponents.A(href=self.href, onclick=self.onclick)(
+                            BaseComponents.Symbol(symbol=self.symbol),
+                            self.label,
+                        ),
+                    )
+                else:
+                    component = BaseComponents.Li(f"text-{self.variant}")(
+                        BaseComponents.Details()(
+                            BaseComponents.Summary()(
+                                BaseComponents.Symbol(symbol=self.symbol),
+                                self.label,
+                            ),
+                            BaseComponents.Ul(
+                                "bg-base-100",
+                                "rounded-t-none",
+                                "p-2",
+                                "z-10",
+                            )(
+                                *[
+                                    subitem.to_component("text-sm")
+                                    for subitem in self.subitems
+                                ]
+                            ),
+                        )
+                    )
+
+                return component.css(" ".join(classnames))
 
         @property
         def title(self) -> Optional[str]:
@@ -262,15 +347,7 @@ class DaisyUI:
             drawer_content = BaseComponents.Div("drawer-content", "flex", "flex-col")(
                 DaisyUI.NavBar(title=self.title)(
                     BaseComponents.Ul("menu", "menu-horizontal", "hidden", "lg:flex")(
-                        *[
-                            BaseComponents.Li()(
-                                BaseComponents.A(href=item.href)(
-                                    BaseComponents.Symbol(symbol=item.symbol),
-                                    item.label,
-                                ),
-                            )
-                            for item in self.menu_items
-                        ],
+                        *[item.to_component() for item in self.menu_items],
                     )
                 ),
                 self.wrapper,
@@ -282,14 +359,7 @@ class DaisyUI:
                 ),
                 BaseComponents.Ul("menu", "bg-base-200", "min-h-full", "w-80", "p-4")(
                     BaseComponents.Li("mb-2", "font-bold")(str(self.title)),
-                    *[
-                        BaseComponents.Li()(
-                            BaseComponents.A(href=item.href)(
-                                BaseComponents.Symbol(symbol=item.symbol), item.label
-                            ),
-                        )
-                        for item in self.menu_items
-                    ],
+                    *[item.to_component() for item in self.menu_items],
                 ),
             )
             # Drawer State Input

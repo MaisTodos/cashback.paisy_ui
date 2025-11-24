@@ -37,6 +37,12 @@ class BaseComponents:
     class Div(BaseComponent):
         """<div></div>"""
 
+    class Details(BaseComponent):
+        """<details></details>"""
+
+    class Summary(BaseComponent):
+        """<summary></summary>"""
+
     class Li(BaseComponent):
         """<li></li>"""
 
@@ -51,6 +57,24 @@ class BaseComponents:
 
     class Form(BaseComponent):
         """<form></form>"""
+
+    class Table(BaseComponent):
+        "<table></table>"
+
+    class TBody(BaseComponent):
+        "<tbody></tbody>"
+
+    class THead(BaseComponent):
+        "<thead></thead>"
+
+    class TR(BaseComponent):
+        "<tr></tr>"
+
+    class TH(BaseComponent):
+        "<th></th>"
+
+    class TD(BaseComponent):
+        "<td></td>"
 
     class Symbol(BaseComponent):
         """<span class="material-symbols-outlined">{symbol}</span>"""

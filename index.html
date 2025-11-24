@@ -24,7 +24,7 @@
       Test
      </div>
      <ul class="menu menu-horizontal hidden lg:flex">
-      <li>
+      <li class="text-base">
        <a href="/home">
         <span class="material-symbols-outlined" symbol="home">
          home
@@ -32,15 +32,63 @@
         Home
        </a>
       </li>
-      <li>
-       <a href="/users">
-        <span class="material-symbols-outlined" symbol="groups">
-         groups
-        </span>
-        Users
-       </a>
+      <li class="text-base">
+       <details>
+        <summary>
+         <span class="material-symbols-outlined" symbol="groups">
+          groups
+         </span>
+         Users
+        </summary>
+        <ul class="bg-base-100 rounded-t-none p-2 z-10">
+         <li class="text-base text-sm">
+          <a href="/users/list">
+           <span class="material-symbols-outlined" symbol="group">
+            group
+           </span>
+           Users
+          </a>
+         </li>
+         <li class="text-base text-sm">
+          <a href="/users/permissions">
+           <span class="material-symbols-outlined" symbol="lock">
+            lock
+           </span>
+           Permissions
+          </a>
+         </li>
+         <li class="text-base text-sm">
+          <details>
+           <summary>
+            <span class="material-symbols-outlined" symbol="update">
+             update
+            </span>
+            Historic
+           </summary>
+           <ul class="bg-base-100 rounded-t-none p-2 z-10">
+            <li class="text-base text-sm">
+             <a href="/users/historic/local">
+              <span class="material-symbols-outlined" symbol="location_on">
+               location_on
+              </span>
+              Local
+             </a>
+            </li>
+            <li class="text-base text-sm">
+             <a href="/users/historic/local">
+              <span class="material-symbols-outlined" symbol="globe">
+               globe
+              </span>
+              Global
+             </a>
+            </li>
+           </ul>
+          </details>
+         </li>
+        </ul>
+       </details>
       </li>
-      <li>
+      <li class="text-base">
        <a href="/tasks">
         <span class="material-symbols-outlined" symbol="done_all">
          done_all
@@ -48,15 +96,58 @@
         Tasks
        </a>
       </li>
+      <li class="text-base">
+       <details>
+        <summary>
+         <span class="material-symbols-outlined" symbol="account_circle">
+          account_circle
+         </span>
+         Perfil
+        </summary>
+        <ul class="bg-base-100 rounded-t-none p-2 z-10">
+         <li class="text-base text-sm">
+          <a href="/profile">
+           <span class="material-symbols-outlined" symbol="person_edit">
+            person_edit
+           </span>
+           Editar
+          </a>
+         </li>
+         <li class="text-error text-sm">
+          <a onclick="modalLogout.showModal()">
+           <span class="material-symbols-outlined" symbol="logout">
+            logout
+           </span>
+           Sair
+          </a>
+         </li>
+        </ul>
+       </details>
+      </li>
      </ul>
     </navbar>
     <div class="p-4 flex flex-col gap-4">
+     <dialog class="modal" id="modalLogout">
+      <div class="modal-box">
+       <h5 class="text-lg font-bold text-error">
+        Logout
+       </h5>
+       <p class="text flex flex-row gap-2 items-center">
+        Você tem certeza?
+       </p>
+      </div>
+      <form class="modal-backdrop" method="dialog">
+       <button>
+        Fechar
+       </button>
+      </form>
+     </dialog>
      <dialog class="modal" id="modalTeste">
       <div class="modal-box">
        <h5 class="text-lg font-bold text-primary">
         Modal Teste
        </h5>
-       <p class="text">
+       <p class="text flex flex-row gap-2 items-center">
         Olá mundo!
        </p>
       </div>
@@ -77,12 +168,95 @@
        <h5 class="text-lg font-bold">
         Título do card
        </h5>
-       <p class="text">
+       <p class="text flex flex-row gap-2 items-center">
         Conteúdo do card
        </p>
-       <span class="badge badge-primary badge-soft">
-        Foo
-       </span>
+       <div class="overflow-x-auto">
+        <table class="table">
+         <thead>
+          <tr>
+           <th>
+            <p class="text flex flex-row gap-2 items-center">
+             <span class="material-symbols-outlined" symbol="tag">
+              tag
+             </span>
+             Id
+            </p>
+           </th>
+           <th>
+            <p class="text flex flex-row gap-2 items-center">
+             <span class="material-symbols-outlined" symbol="signature">
+              signature
+             </span>
+             Nome
+            </p>
+           </th>
+           <th>
+            <p class="text flex flex-row gap-2 items-center">
+             <span class="material-symbols-outlined" symbol="clock_loader_10">
+              clock_loader_10
+             </span>
+             Status
+            </p>
+           </th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>
+            0
+           </td>
+           <td>
+            foo
+           </td>
+           <td>
+            <span class="badge badge-primary badge-soft">
+             Foo
+            </span>
+           </td>
+          </tr>
+          <tr>
+           <td>
+            1
+           </td>
+           <td>
+            bar
+           </td>
+           <td>
+            <span class="badge badge-warning badge-soft">
+             Foo
+            </span>
+           </td>
+          </tr>
+          <tr>
+           <td>
+            2
+           </td>
+           <td>
+            far
+           </td>
+           <td>
+            <span class="badge badge-warning badge-soft">
+             Foo
+            </span>
+           </td>
+          </tr>
+          <tr>
+           <td>
+            3
+           </td>
+           <td>
+            boo
+           </td>
+           <td>
+            <span class="badge badge-primary badge-soft">
+             Foo
+            </span>
+           </td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
        <button class="btn" onclick="modalTeste.showModal()">
         Abrir Modal
        </button>
@@ -94,7 +268,7 @@
         Formulário
        </h5>
        <form class="flex flex-col gap-4">
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
          <fieldset class="fieldset" id="nome" name="nome" placeholder="Zé da Silva" type="text">
           <legend class="fieldset-legend">
            Nome Completo
@@ -156,7 +330,7 @@
      <li class="mb-2 font-bold">
       Test
      </li>
-     <li>
+     <li class="text-base">
       <a href="/home">
        <span class="material-symbols-outlined" symbol="home">
         home
@@ -164,21 +338,97 @@
        Home
       </a>
      </li>
-     <li>
-      <a href="/users">
-       <span class="material-symbols-outlined" symbol="groups">
-        groups
-       </span>
-       Users
-      </a>
+     <li class="text-base">
+      <details>
+       <summary>
+        <span class="material-symbols-outlined" symbol="groups">
+         groups
+        </span>
+        Users
+       </summary>
+       <ul class="bg-base-100 rounded-t-none p-2 z-10">
+        <li class="text-base text-sm">
+         <a href="/users/list">
+          <span class="material-symbols-outlined" symbol="group">
+           group
+          </span>
+          Users
+         </a>
+        </li>
+        <li class="text-base text-sm">
+         <a href="/users/permissions">
+          <span class="material-symbols-outlined" symbol="lock">
+           lock
+          </span>
+          Permissions
+         </a>
+        </li>
+        <li class="text-base text-sm">
+         <details>
+          <summary>
+           <span class="material-symbols-outlined" symbol="update">
+            update
+           </span>
+           Historic
+          </summary>
+          <ul class="bg-base-100 rounded-t-none p-2 z-10">
+           <li class="text-base text-sm">
+            <a href="/users/historic/local">
+             <span class="material-symbols-outlined" symbol="location_on">
+              location_on
+             </span>
+             Local
+            </a>
+           </li>
+           <li class="text-base text-sm">
+            <a href="/users/historic/local">
+             <span class="material-symbols-outlined" symbol="globe">
+              globe
+             </span>
+             Global
+            </a>
+           </li>
+          </ul>
+         </details>
+        </li>
+       </ul>
+      </details>
      </li>
-     <li>
+     <li class="text-base">
       <a href="/tasks">
        <span class="material-symbols-outlined" symbol="done_all">
         done_all
        </span>
        Tasks
       </a>
+     </li>
+     <li class="text-base">
+      <details>
+       <summary>
+        <span class="material-symbols-outlined" symbol="account_circle">
+         account_circle
+        </span>
+        Perfil
+       </summary>
+       <ul class="bg-base-100 rounded-t-none p-2 z-10">
+        <li class="text-base text-sm">
+         <a href="/profile">
+          <span class="material-symbols-outlined" symbol="person_edit">
+           person_edit
+          </span>
+          Editar
+         </a>
+        </li>
+        <li class="text-error text-sm">
+         <a onclick="modalLogout.showModal()">
+          <span class="material-symbols-outlined" symbol="logout">
+           logout
+          </span>
+          Sair
+         </a>
+        </li>
+       </ul>
+      </details>
      </li>
     </ul>
    </div>
