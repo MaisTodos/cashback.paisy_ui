@@ -5,7 +5,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
   </script>
  </head>
- <body>
+ <body data-theme="dark">
   <main class="drawer">
    <input class="drawer-toggle" id="drawer-toggle" type="checkbox"/>
    <div class="drawer-content flex flex-col">
@@ -99,7 +99,7 @@
          <span class="material-symbols-outlined" symbol="account_circle">
           account_circle
          </span>
-         Perfil
+         Profile
         </summary>
         <ul class="bg-base-100 rounded-t-none p-2 z-10">
          <li class="text-base text-sm">
@@ -107,7 +107,7 @@
            <span class="material-symbols-outlined" symbol="person_edit">
             person_edit
            </span>
-           Editar
+           Edit
           </a>
          </li>
          <li class="text-error text-sm">
@@ -115,7 +115,7 @@
            <span class="material-symbols-outlined" symbol="logout">
             logout
            </span>
-           Sair
+           Logout
           </a>
          </li>
         </ul>
@@ -126,11 +126,11 @@
     <div class="p-4 flex flex-col gap-4">
      <dialog class="modal" id="modalLogout">
       <div class="modal-box">
-       <h5 class="text-lg font-bold text-error">
+       <h5 class="text-lg font-bold flex flex-row gap-2 items-center text-error">
         Logout
        </h5>
-       <p class="text flex flex-row gap-2 items-center">
-        Você tem certeza?
+       <p class="flex flex-row gap-2 items-center">
+        Are you sure?
        </p>
       </div>
       <form class="modal-backdrop" method="dialog">
@@ -139,13 +139,13 @@
        </button>
       </form>
      </dialog>
-     <dialog class="modal" id="modalTeste">
+     <dialog class="modal" id="modal_test">
       <div class="modal-box">
-       <h5 class="text-lg font-bold text-primary">
-        Modal Teste
+       <h5 class="text-lg font-bold flex flex-row gap-2 items-center text-primary">
+        Modal Test
        </h5>
-       <p class="text flex flex-row gap-2 items-center">
-        Olá mundo!
+       <p class="flex flex-row gap-2 items-center">
+        Hello World!
        </p>
       </div>
       <form class="modal-backdrop" method="dialog">
@@ -158,22 +158,22 @@
       <span class="material-symbols-outlined" symbol="done_all">
        done_all
       </span>
-      Tudo certo!
+      It's all fine!
      </div>
-     <div class="card shadow-sm">
+     <div class="card border border-base-300">
       <div class="card-body">
-       <h5 class="text-lg font-bold">
-        Título do card
+       <h5 class="text-lg font-bold flex flex-row gap-2 items-center">
+        Card Title
        </h5>
-       <p class="text flex flex-row gap-2 items-center">
-        Conteúdo do card
+       <p class="flex flex-row gap-2 items-center">
+        Card content
        </p>
        <div class="overflow-x-auto">
         <table class="table">
          <thead>
           <tr>
            <th>
-            <p class="text flex flex-row gap-2 items-center">
+            <p class="flex flex-row gap-2 items-center">
              <span class="material-symbols-outlined" symbol="tag">
               tag
              </span>
@@ -181,15 +181,15 @@
             </p>
            </th>
            <th>
-            <p class="text flex flex-row gap-2 items-center">
+            <p class="flex flex-row gap-2 items-center">
              <span class="material-symbols-outlined" symbol="signature">
               signature
              </span>
-             Nome
+             Name
             </p>
            </th>
            <th>
-            <p class="text flex flex-row gap-2 items-center">
+            <p class="flex flex-row gap-2 items-center">
              <span class="material-symbols-outlined" symbol="clock_loader_10">
               clock_loader_10
              </span>
@@ -254,33 +254,33 @@
          </tbody>
         </table>
        </div>
-       <button class="btn" onclick="modalTeste.showModal()">
-        Abrir Modal
+       <button class="btn" onclick="modal_test.showModal()">
+        Open Modal
        </button>
       </div>
      </div>
-     <div class="card shadow-sm">
+     <div class="card border border-base-300">
       <div class="card-body">
-       <h5 class="text-lg font-bold">
-        Formulário
+       <h5 class="text-lg font-bold flex flex-row gap-2 items-center">
+        Form
        </h5>
        <form class="flex flex-col gap-4">
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-         <fieldset class="fieldset" id="nome" name="nome" placeholder="Zé da Silva" type="text">
+         <fieldset class="fieldset" id="nome" name="nome" placeholder="Jack Silva" type="text">
           <legend class="fieldset-legend">
-           Nome Completo
+           Full Name
           </legend>
           <label class="input w-full">
            <span class="text-sm opacity-50 material-symbols-outlined" symbol="signature">
             signature
            </span>
-           <input class="grow" help="Preencha com seu nome completo" id="nome" name="nome" placeholder="Zé da Silva" type="text"/>
+           <input class="grow" help="Both your first and last names" id="nome" name="nome" placeholder="Jack Silva" type="text"/>
           </label>
           <p class="label">
-           Preencha com seu nome completo
+           Both your first and last names
           </p>
          </fieldset>
-         <fieldset class="fieldset" id="email" name="email" placeholder="email@dominio.com" type="email">
+         <fieldset class="fieldset" id="email" name="email" placeholder="email@domain.com" type="email">
           <legend class="fieldset-legend">
            E-mail
           </legend>
@@ -288,29 +288,29 @@
            <span class="text-sm opacity-50 material-symbols-outlined" symbol="email">
             email
            </span>
-           <input class="grow" help="Preencha com seu e-mail" id="email" name="email" placeholder="email@dominio.com" type="email"/>
+           <input class="grow" help="Your best e-mail" id="email" name="email" placeholder="email@domain.com" type="email"/>
           </label>
           <p class="label">
-           Preencha com seu e-mail
+           Your best e-mail
           </p>
          </fieldset>
          <fieldset class="fieldset" id="idade" name="idade" placeholder="10/10/1990" type="date">
           <legend class="fieldset-legend">
-           Data de Nascimento
+           Birthdate
           </legend>
           <label class="input w-full">
            <span class="text-sm opacity-50 material-symbols-outlined" symbol="cake">
             cake
            </span>
-           <input class="grow" help="Preencha com sua data de nascimento" id="idade" name="idade" placeholder="10/10/1990" type="date"/>
+           <input class="grow" help="Including the year" id="idade" name="idade" placeholder="10/10/1990" type="date"/>
           </label>
           <p class="label">
-           Preencha com sua data de nascimento
+           Including the year
           </p>
          </fieldset>
         </div>
         <button class="btn btn-accent">
-         Enviar
+         Submit
         </button>
        </form>
       </div>
@@ -402,7 +402,7 @@
         <span class="material-symbols-outlined" symbol="account_circle">
          account_circle
         </span>
-        Perfil
+        Profile
        </summary>
        <ul class="bg-base-100 rounded-t-none p-2 z-10">
         <li class="text-base text-sm">
@@ -410,7 +410,7 @@
           <span class="material-symbols-outlined" symbol="person_edit">
            person_edit
           </span>
-          Editar
+          Edit
          </a>
         </li>
         <li class="text-error text-sm">
@@ -418,7 +418,7 @@
           <span class="material-symbols-outlined" symbol="logout">
            logout
           </span>
-          Sair
+          Logout
          </a>
         </li>
        </ul>

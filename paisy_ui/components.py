@@ -19,6 +19,11 @@ class DaisyUI:
 
         tag_name = "html"
 
+        @property
+        def data_theme(self) -> str:
+            attr = self.attrs_pop("data-theme")
+            return str(attr) if attr else "dark"
+
         def _build_wrapper(self):
             head = BaseComponents.Head()(
                 BaseComponents.Link(
@@ -34,7 +39,7 @@ class DaisyUI:
                 BaseComponents.Script(src=CDN_TAILWIND),
             )
             self.append(head)
-            self.wrapper = BaseComponents.Body()
+            self.wrapper = BaseComponents.Body(data_theme=self.data_theme)
             self.append(self.wrapper)
 
     class VariantComponent(BaseComponent):
@@ -70,7 +75,7 @@ class DaisyUI:
         base_class = "text"
 
         def _build(self):
-            self.css("text", "flex", "flex-row", "gap-2", "items-center")
+            self.css("flex", "flex-row", "gap-2", "items-center")
 
     class Title(VariantComponent):
         """<h5 class="text-lg font-bold"></h5>"""
@@ -79,7 +84,9 @@ class DaisyUI:
         base_class = "text"
 
         def _build(self):
-            self.css("text-lg font-bold")
+            self.css(
+                "text-lg", "font-bold", "flex", "flex-row", "gap-2", "items-center"
+            )
 
     class Form(BaseComponents.Form):
         """<form class="flex flex-col gap-4"></form>"""
@@ -207,7 +214,7 @@ class DaisyUI:
         tag_name = "div"
 
         def _build(self):
-            self.css("card", "shadow-sm")
+            self.css("card", "border", "border-base-300")
 
         def _build_wrapper(self):
             self.wrapper = BaseComponents.Div("card-body")

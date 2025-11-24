@@ -1,12 +1,12 @@
 from paisy_ui import DaisyUI
 
 if __name__ == "__main__":
-    modal_teste = DaisyUI.Modal(id="modalTeste")(
-        DaisyUI.Title().primary()("Modal Teste"), DaisyUI.Text()("Olá mundo!")
+    modal_test = DaisyUI.Modal(id="modal_test")(
+        DaisyUI.Title().primary()("Modal Test"), DaisyUI.Text()("Hello World!")
     )
 
     modal_logout = DaisyUI.Modal(id="modalLogout")(
-        DaisyUI.Title().error()("Logout"), DaisyUI.Text()("Você tem certeza?")
+        DaisyUI.Title().error()("Logout"), DaisyUI.Text()("Are you sure?")
     )
 
     menu_items = [
@@ -41,14 +41,14 @@ if __name__ == "__main__":
             ],
         ),
         DaisyUI.LayoutNavbar.MenuItem(
-            label="Perfil",
+            label="Profile",
             symbol="account_circle",
             subitems=[
                 DaisyUI.LayoutNavbar.MenuItem(
-                    label="Editar", href="/profile", symbol="person_edit"
+                    label="Edit", href="/profile", symbol="person_edit"
                 ),
                 DaisyUI.LayoutNavbar.MenuItem(
-                    label="Sair",
+                    label="Logout",
                     onclick=modal_logout.js_open,
                     symbol="logout",
                     variant="error",
@@ -60,26 +60,26 @@ if __name__ == "__main__":
     form = DaisyUI.Form()(
         DaisyUI.LayoutGrid()(
             DaisyUI.Input(
-                legend="Nome Completo",
-                help="Preencha com seu nome completo",
+                legend="Full Name",
+                help="Both your first and last names",
                 symbol="signature",
                 type="text",
                 name="nome",
                 id="nome",
-                placeholder="Zé da Silva",
+                placeholder="Jack Silva",
             ),
             DaisyUI.Input(
                 legend="E-mail",
-                help="Preencha com seu e-mail",
+                help="Your best e-mail",
                 symbol="email",
                 type="email",
                 name="email",
                 id="email",
-                placeholder="email@dominio.com",
+                placeholder="email@domain.com",
             ),
             DaisyUI.Input(
-                legend="Data de Nascimento",
-                help="Preencha com sua data de nascimento",
+                legend="Birthdate",
+                help="Including the year",
                 symbol="cake",
                 type="date",
                 name="idade",
@@ -87,15 +87,15 @@ if __name__ == "__main__":
                 placeholder="10/10/1990",
             ),
         ),
-        DaisyUI.Button().accent()("Enviar"),
+        DaisyUI.Button().accent()("Submit"),
     )
 
-    alert = DaisyUI.Alert(symbol="done_all").success()("Tudo certo!")
+    alert = DaisyUI.Alert(symbol="done_all").success()("It's all fine!")
 
     table = DaisyUI.Table(
         collumns=[
             DaisyUI.Text()(DaisyUI.Symbol(symbol="tag"), "Id"),
-            DaisyUI.Text()(DaisyUI.Symbol(symbol="signature"), "Nome"),
+            DaisyUI.Text()(DaisyUI.Symbol(symbol="signature"), "Name"),
             DaisyUI.Text()(DaisyUI.Symbol(symbol="clock_loader_10"), "Status"),
         ],
         rows=[
@@ -112,16 +112,16 @@ if __name__ == "__main__":
             menu_items=menu_items,
         )(
             modal_logout,
-            modal_teste,
+            modal_test,
             alert,
             DaisyUI.Card()(
-                DaisyUI.Title()("Título do card"),
-                DaisyUI.Text()("Conteúdo do card"),
+                DaisyUI.Title()("Card Title"),
+                DaisyUI.Text()("Card content"),
                 table,
-                DaisyUI.Button(onclick=modal_teste.js_open)("Abrir Modal"),
+                DaisyUI.Button(onclick=modal_test.js_open)("Open Modal"),
             ),
             DaisyUI.Card()(
-                DaisyUI.Title()("Formulário"),
+                DaisyUI.Title()("Form"),
                 form,
             ),
         )
