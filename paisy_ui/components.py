@@ -10,7 +10,11 @@ CDN_TAILWIND = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
 
 
 class DaisyUI:
+    """DaisyUI Components, check the [full documentation](https://daisyui.com)"""
+
     class HTML(WrapperComponent):
+        """Base HTML with DaisyUI, Tailwind and Material Symbols Outlined CDNs"""
+
         tag_name = "html"
 
         def _build_wrapper(self):
@@ -32,6 +36,8 @@ class DaisyUI:
             self.append(self.wrapper)
 
     class VariantComponent(BaseComponent):
+        """A component that have a `primary`, `success`, `danger`, `warning`, `error` or `accent` variant"""
+
         base_class: str
 
         def _build(self):
@@ -56,10 +62,14 @@ class DaisyUI:
             return self.css(f"{self.base_class}-accent")
 
     class Text(VariantComponent):
+        """<p class="text"></p>"""
+
         tag_name = "p"
         base_class = "text"
 
     class Title(VariantComponent):
+        """<h5 class="text-lg font-bold"></h5>"""
+
         tag_name = "h5"
         base_class = "text"
 
@@ -67,10 +77,14 @@ class DaisyUI:
             self.css("text-lg font-bold")
 
     class Form(BaseComponents.Form):
+        """<form class="flex flex-col gap-4"></form>"""
+
         def _build(self):
             self.css("flex", "flex-col", "gap-4")
 
     class Input(BaseComponent):
+        """A complete fieldset with optional symbol, optional legend and optional help"""
+
         tag_name = "fieldset"
 
         @property
@@ -105,12 +119,16 @@ class DaisyUI:
                 self.append(BaseComponents.P("label")(str(self.help)))
 
     class Button(VariantComponent):
+        """<button class="btn"></button>"""
+
         base_class = "btn"
 
         def small(self):
             return self.css(f"{self.base_class}-sm")
 
     class Badge(VariantComponent):
+        """<span class="badge"></span>"""
+
         tag_name = "span"
         base_class = "badge"
 
@@ -118,6 +136,8 @@ class DaisyUI:
             return self.css("badge-soft")
 
     class Alert(VariantComponent):
+        """<div class="alert"></div>"""
+
         tag_name = "div"
         base_class = "alert"
 
@@ -132,6 +152,8 @@ class DaisyUI:
                 self.append(BaseComponents.Symbol(symbol=self.symbol))
 
     class Card(WrapperComponent):
+        """<div class="card shadow-sm"><div class="card-body"></div></div>"""
+
         tag_name = "div"
 
         def _build(self):
@@ -142,6 +164,8 @@ class DaisyUI:
             self.append(self.wrapper)
 
     class Modal(WrapperComponent):
+        """A modal dialog that can be opened with `Modal.js_open` JavaScript function"""
+
         tag_name = "dialog"
 
         @property
@@ -169,6 +193,7 @@ class DaisyUI:
             self.attrs.update(id=self.id)
 
     class NavBar(BaseComponent):
+        """A simple navbar"""
 
         @property
         def title(self) -> Optional[str]:
@@ -194,12 +219,16 @@ class DaisyUI:
                 )
 
     class LayoutGrid(BaseComponent):
+        """<div class="grid grid-cols-3 gap-4"></div>"""
+
         tag_name = "div"
 
         def _build(self):
             self.css("grid", "grid-cols-3", "gap-4")
 
     class LayoutNavbar(WrapperComponent):
+        """A complete responsive layout with a navbar and a sidebar for small screens"""
+
         tag_name = "main"
 
         @dataclass

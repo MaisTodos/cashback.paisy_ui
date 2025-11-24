@@ -2,39 +2,59 @@ from .core import BaseComponent
 
 
 class BaseComponents:
-    class Head(BaseComponent): ...
+    """Raw HTML Components"""
 
-    class Script(BaseComponent): ...
+    class HTML(BaseComponent):
+        """<html></html>"""
 
-    class Link(BaseComponent): ...
+    class Head(BaseComponent):
+        """<head></head>"""
 
-    class Body(BaseComponent): ...
+    class Script(BaseComponent):
+        """<script></script>"""
 
-    class HTML(BaseComponent): ...
+    class Link(BaseComponent):
+        """<link></link>"""
 
-    class A(BaseComponent): ...
+    class Body(BaseComponent):
+        """<body></body>"""
 
-    class P(BaseComponent): ...
+    class A(BaseComponent):
+        """<a></a>"""
 
-    class Span(BaseComponent): ...
+    class P(BaseComponent):
+        """<p></p>"""
 
-    class Label(BaseComponent): ...
+    class Span(BaseComponent):
+        """<span></span>"""
 
-    class Button(BaseComponent): ...
+    class Label(BaseComponent):
+        """<label></label>"""
 
-    class Div(BaseComponent): ...
+    class Button(BaseComponent):
+        """<button></button>"""
 
-    class Li(BaseComponent): ...
+    class Div(BaseComponent):
+        """<div></div>"""
 
-    class Ul(BaseComponent): ...
+    class Li(BaseComponent):
+        """<li></li>"""
 
-    class Input(BaseComponent): ...
+    class Ul(BaseComponent):
+        """<ul></ul>"""
 
-    class Legend(BaseComponent): ...
+    class Input(BaseComponent):
+        """<input></input>"""
 
-    class Form(BaseComponent): ...
+    class Legend(BaseComponent):
+        """<legend></legend>"""
+
+    class Form(BaseComponent):
+        """<form></form>"""
 
     class Symbol(BaseComponent):
+        """<span class="material-symbols-outlined">{symbol}</span>"""
+
         tag_name = "span"
 
         @property
