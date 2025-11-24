@@ -49,14 +49,14 @@ All components inherit the `__call__` behavior from `BaseComponent`, which allow
 ```python
 from paisy_ui import BaseComponents
 
-foo = BaseComponents.Div()(
-    BaseComponents.Div()(
-        BaseComponents.Div()(
-            BaseComponents.Div()(
-                BaseComponents.Div()(
+foo = BaseComponents.Div(style="padding:8px; background:red;")(
+    BaseComponents.Div(style="padding:8px; background:green;")(
+        BaseComponents.Div(style="padding:8px; background:blue;")(
+            BaseComponents.Div(style="padding:8px; background:yellow;")(
+                BaseComponents.Div(style="padding:8px; background:pink;")(
                     BaseComponents.P()("Hello World"),
                     BaseComponents.P()("This is another text"),
-                    BaseComponents.Button()("Ok"),
+                    BaseComponents.Button(onclick="alert('ok')")("Ok"),
                 )
             )
         )
