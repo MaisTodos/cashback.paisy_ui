@@ -1,0 +1,187 @@
+<html>
+ <head>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+  </link>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" type="text/css">
+  </link>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
+  </script>
+ </head>
+ <body>
+  <main class="drawer">
+   <input class="drawer-toggle" id="drawer-toggle" type="checkbox">
+   </input>
+   <div class="drawer-content flex flex-col">
+    <navbar class="navbar bg-base-300 w-full">
+     <div class="flex-none lg:hidden">
+      <label class="btn btn-square btn-ghost" for="drawer-toggle">
+       <span class="material-symbols-outlined" symbol="menu">
+        menu
+       </span>
+      </label>
+     </div>
+     <div class="mx-2 flex-1 px-2 font-bold">
+      Test
+     </div>
+     <ul class="menu menu-horizontal hidden lg:flex">
+      <li>
+       <a href="/home">
+        <span class="material-symbols-outlined" symbol="home">
+         home
+        </span>
+        Home
+       </a>
+      </li>
+      <li>
+       <a href="/users">
+        <span class="material-symbols-outlined" symbol="groups">
+         groups
+        </span>
+        Users
+       </a>
+      </li>
+      <li>
+       <a href="/tasks">
+        <span class="material-symbols-outlined" symbol="done_all">
+         done_all
+        </span>
+        Tasks
+       </a>
+      </li>
+     </ul>
+    </navbar>
+    <div class="p-4 flex flex-col gap-4">
+     <dialog class="modal" id="modalTeste">
+      <div class="modal-box">
+       <h5 class="text-lg font-bold text-primary">
+        Modal Teste
+       </h5>
+       <p class="text">
+        Olá mundo!
+       </p>
+      </div>
+      <form class="modal-backdrop" method="dialog">
+       <button>
+        Fechar
+       </button>
+      </form>
+     </dialog>
+     <div class="alert alert-success">
+      <span class="material-symbols-outlined" symbol="done_all">
+       done_all
+      </span>
+      Tudo certo!
+     </div>
+     <div class="card shadow-sm">
+      <div class="card-body">
+       <h5 class="text-lg font-bold">
+        Título do card
+       </h5>
+       <p class="text">
+        Conteúdo do card
+       </p>
+       <span class="badge badge-primary badge-soft">
+        Foo
+       </span>
+       <button class="btn" onclick="modalTeste.showModal()">
+        Abrir Modal
+       </button>
+      </div>
+     </div>
+     <div class="card shadow-sm">
+      <div class="card-body">
+       <h5 class="text-lg font-bold">
+        Formulário
+       </h5>
+       <form class="flex flex-col gap-4">
+        <div class="grid grid-cols-3 gap-4">
+         <fieldset class="fieldset" id="nome" name="nome" placeholder="Zé da Silva" type="text">
+          <legend class="fieldset-legend">
+           Nome Completo
+          </legend>
+          <label class="input w-full">
+           <span class="text-sm opacity-50 material-symbols-outlined" symbol="signature">
+            signature
+           </span>
+           <input class="grow" help="Preencha com seu nome completo" id="nome" name="nome" placeholder="Zé da Silva" type="text">
+           </input>
+          </label>
+          <p class="label">
+           Preencha com seu nome completo
+          </p>
+         </fieldset>
+         <fieldset class="fieldset" id="email" name="email" placeholder="email@dominio.com" type="email">
+          <legend class="fieldset-legend">
+           E-mail
+          </legend>
+          <label class="input w-full">
+           <span class="text-sm opacity-50 material-symbols-outlined" symbol="email">
+            email
+           </span>
+           <input class="grow" help="Preencha com seu e-mail" id="email" name="email" placeholder="email@dominio.com" type="email">
+           </input>
+          </label>
+          <p class="label">
+           Preencha com seu e-mail
+          </p>
+         </fieldset>
+         <fieldset class="fieldset" id="idade" name="idade" placeholder="10/10/1990" type="date">
+          <legend class="fieldset-legend">
+           Data de Nascimento
+          </legend>
+          <label class="input w-full">
+           <span class="text-sm opacity-50 material-symbols-outlined" symbol="cake">
+            cake
+           </span>
+           <input class="grow" help="Preencha com sua data de nascimento" id="idade" name="idade" placeholder="10/10/1990" type="date">
+           </input>
+          </label>
+          <p class="label">
+           Preencha com sua data de nascimento
+          </p>
+         </fieldset>
+        </div>
+        <button class="btn btn-accent">
+         Enviar
+        </button>
+       </form>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="drawer-side">
+    <label aria-label="close sidebar" class="drawer-overlay" for="drawer-toggle">
+    </label>
+    <ul class="menu bg-base-200 min-h-full w-80 p-4">
+     <li class="mb-2 font-bold">
+      Test
+     </li>
+     <li>
+      <a href="/home">
+       <span class="material-symbols-outlined" symbol="home">
+        home
+       </span>
+       Home
+      </a>
+     </li>
+     <li>
+      <a href="/users">
+       <span class="material-symbols-outlined" symbol="groups">
+        groups
+       </span>
+       Users
+      </a>
+     </li>
+     <li>
+      <a href="/tasks">
+       <span class="material-symbols-outlined" symbol="done_all">
+        done_all
+       </span>
+       Tasks
+      </a>
+     </li>
+    </ul>
+   </div>
+  </main>
+ </body>
+</html>
