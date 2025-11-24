@@ -125,7 +125,7 @@ page = DaisyUI.HTML()(
             DaisyUI.Title()("Card Title"),
             DaisyUI.Text()("Card Content"),
             DaisyUI.Badge().primary().soft()("Foo"),
-            DaisyUI.Button(onclick=modal.js_open)("Open Modal"),
+            DaisyUI.Button(onclick="myModal.openModal()")("Open Modal"),
         )
     )
 )
