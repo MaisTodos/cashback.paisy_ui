@@ -4,11 +4,17 @@ version = "0.1.0"
 description = ""
 authors = ["Iago B. Almeida <iago.almeida@maistodos.com.br>"]
 readme = "README.md"
+packages = [
+    { include = "paisy_ui", from = "src" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.12"
 beautifulsoup4 = "^4.14.2"
 
+
+[tool.poetry.group.dev.dependencies]
+fastapi = {extras = ["standard"], version = "^0.122.0"}
 
 [build-system]
 requires = ["poetry-core"]

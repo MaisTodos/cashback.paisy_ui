@@ -41,7 +41,9 @@ class BaseComponent(Tag):
 
     def attrs_pop(self, attribute_name: str, default=None):
         if not attribute_name in self.__popped_attrs:
-            self.__popped_attrs[attribute_name] = self.attrs.pop(attribute_name, None)
+            self.__popped_attrs[attribute_name] = self.attrs.pop(
+                attribute_name, default
+            )
         value = self.__popped_attrs.get(attribute_name, default)
         return value
 

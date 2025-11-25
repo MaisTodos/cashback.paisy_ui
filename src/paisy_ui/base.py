@@ -1,3 +1,5 @@
+from bs4.element import NavigableString, PageElement
+
 from .core import BaseComponent, SelfClosingBaseComponent
 
 
@@ -13,6 +15,9 @@ class BaseComponents:
     class Script(BaseComponent):
         """<script></script>"""
 
+    class Style(BaseComponent):
+        """<style></style>"""
+
     class Link(SelfClosingBaseComponent):
         """<link/>"""
 
@@ -24,6 +29,12 @@ class BaseComponents:
 
     class P(BaseComponent):
         """<p></p>"""
+
+    class Pre(BaseComponent):
+        """<pre></pre>"""
+
+    class Code(BaseComponent):
+        """<code></code>"""
 
     class Span(BaseComponent):
         """<span></span>"""
@@ -90,4 +101,5 @@ class BaseComponents:
 
         def _build(self):
             self.css("material-symbols-outlined")
+            self.append(self.symbol)
             self.append(self.symbol)

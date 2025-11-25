@@ -134,3 +134,10 @@ print(page.prettify())
 ```
 
 ---
+
+## Examples
+
+1. FastAPI:
+```bash
+poetry run fastapi run examples/with_fastapi.py --reload
+```

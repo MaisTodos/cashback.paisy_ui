@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Optional, Union
 
+from bs4 import Tag
+
 from .base import BaseComponents
 from .core import BaseComponent, WrapperComponent
 
@@ -37,6 +39,18 @@ class DaisyUI:
                     type="text/css",
                 ),
                 BaseComponents.Script(src=CDN_TAILWIND),
+                BaseComponents.Script(type="module")(
+                    """
+                import { codeToHtml, createHighlighter } from 'https://esm.sh/shiki@3.0.0'
+
+                document.querySelectorAll("code[data-lang='python']").forEach(async (el) => {
+                    el.innerHTML = await codeToHtml(el.innerHTML, {lang:'python', theme:'github-dark-default' });
+                })
+                """
+                ),
+                BaseComponents.Style()(
+                    ".shiki { background: transparent !important; }"
+                ),
             )
             self.append(head)
             self.wrapper = BaseComponents.Body(data_theme=self.data_theme)
@@ -52,6 +66,9 @@ class DaisyUI:
 
         def primary(self):
             return self.css(f"{self.base_class}-primary")
+
+        def secondary(self):
+            return self.css(f"{self.base_class}-secondary")
 
         def success(self):
             return self.css(f"{self.base_class}-success")
@@ -78,6 +95,17 @@ class DaisyUI:
             self.css("flex", "flex-row", "gap-2", "items-center")
 
     class Title(VariantComponent):
+        """<h3 class="text-xl font-bold"></h3>"""
+
+        tag_name = "h3"
+        base_class = "text"
+
+        def _build(self):
+            self.css(
+                "text-xl", "font-bold", "flex", "flex-row", "gap-2", "items-center"
+            )
+
+    class SubTitle(VariantComponent):
         """<h5 class="text-lg font-bold"></h5>"""
 
         tag_name = "h5"
@@ -180,8 +208,19 @@ class DaisyUI:
 
         base_class = "btn"
 
+        def __init__(self, *class_, **attributes):
+            if attributes.get("href"):
+                self.tag_name = "a"
+            super().__init__(*class_, **attributes)
+
         def small(self):
             return self.css(f"{self.base_class}-sm")
+
+        def ghost(self):
+            return self.css(f"{self.base_class}-ghost")
+
+        def dash(self):
+            return self.css(f"{self.base_class}-dash")
 
     class Badge(VariantComponent):
         """<span class="badge"></span>"""
@@ -207,6 +246,31 @@ class DaisyUI:
             self.css("alert")
             if self.symbol:
                 self.append(BaseComponents.Symbol(symbol=self.symbol))
+
+    # <div class="mockup-code w-full">
+    #   <pre data-prefix="$"><code>npm i daisyui</code></pre>
+    # </div>
+
+    class Code(BaseComponent):
+        """<div class="mockup-code w-full"><pre {data_prefix}><code>{code}</code></pre></div></div>"""
+
+        tag_name = "div"
+
+        @property
+        def data_prefix(self) -> Optional[str]:
+            return self.attrs_pop("data-prefix")
+
+        @property
+        def data_lang(self) -> Optional[str]:
+            return self.attrs_pop("data-lang")
+
+        def _build(self):
+            self.css("mockup-code", "w-full")
+
+        def __call__(self, *components: Tag | str):
+            for c in components:
+                self.append(BaseComponents.Code(data_lang=self.data_lang)(c))
+            return self
 
     class Card(WrapperComponent):
         """<div class="card shadow-sm"><div class="card-body"></div></div>"""
@@ -284,6 +348,16 @@ class DaisyUI:
 
         def _build(self):
             self.css("grid", "md:grid-cols-2", "lg:grid-cols-3", "gap-4")
+
+    class LayoutCentered(BaseComponent):
+        """<div class="mx-auto min-h-screen flex items-center justify-center"></div>"""
+
+        tag_name = "div"
+
+        def _build(self):
+            self.css(
+                "mx-auto", "min-h-screen", "flex", "items-center", "justify-center"
+            )
 
     class LayoutNavbar(WrapperComponent):
         """A complete responsive layout with a navbar and a sidebar for small screens"""
