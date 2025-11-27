@@ -11,10 +11,21 @@ permissions:
 
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/upload-pages-artifact@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Upload artifact (examples folder)
+        uses: actions/upload-pages-artifact@v2
         with:
-          path: ./examples
-      - uses: actions/deploy-pages@v2
+          path: ./examples # 👈 sua pasta que será publicada
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
