@@ -32,7 +32,7 @@ pip install paisy_ui
 
 ### Showcase
 
-Checkout the [Complete Showcase](https://maistodos.github.io/cashback.paisy_ui/showcase.html)
+Checkout the [Complete Showcase](https://maistodos.github.io/cashback.paisy_ui/examples)
 
 ### Basic Concepts
 
