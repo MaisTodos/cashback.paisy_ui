@@ -1,6 +1,6 @@
 from typing import List, Type
 
-from paisy_ui import BaseComponent, DaisyUI
+from paisy_ui import BaseComponent, BaseComponents, DaisyUI
 
 BASE_VARIANTS = [
     "primary",
@@ -10,6 +10,16 @@ BASE_VARIANTS = [
     "error",
     "accent",
 ]
+
+
+def build_card(title: str, grid: DaisyUI.LayoutGrid, code: DaisyUI.Code):
+    return DaisyUI.Card()(
+        DaisyUI.SubTitle()(title),
+        BaseComponents.Div("grid", "grid-cols-2", "gap-4")(
+            grid,
+            code,
+        ),
+    )
 
 
 def build_variant_example(
@@ -38,18 +48,12 @@ def build_variant_example(
 {variants_code}
         """
     )
-    return DaisyUI.Card()(
-        DaisyUI.SubTitle()(component_code),
-        DaisyUI.Divider(),
-        DaisyUI.LayoutGrid()(
-            component(**kwargs)("Default"),
-            *[
-                getattr(component(**kwargs), variant)()(variant.title())
-                for variant in variants
-            ],
-        ),
-        code,
-    )
+
+    grid = DaisyUI.LayoutGrid("h-min", "p-4", "bg-base-300", "rounded-lg")
+    for variant in variants:
+        grid.append(getattr(component(**kwargs), variant)()(variant.title()))
+
+    return build_card(title=component_code, code=code, grid=grid)
 
 
 def build_kwargs_example(component: Type[BaseComponent], kwargs_list: List[dict]):
@@ -74,16 +78,11 @@ def build_kwargs_example(component: Type[BaseComponent], kwargs_list: List[dict]
         """
     )
 
-    grid = DaisyUI.LayoutGrid()
+    grid = DaisyUI.LayoutGrid("h-min", "p-4", "bg-base-300", "rounded-lg")
     for kwargs in kwargs_list:
         grid.append(component(**kwargs))
 
-    return DaisyUI.Card()(
-        DaisyUI.SubTitle()(component_code),
-        DaisyUI.Divider(),
-        grid,
-        code,
-    )
+    return build_card(title=component_code, grid=grid, code=code)
 
 
 if __name__ == "__main__":
@@ -106,6 +105,17 @@ if __name__ == "__main__":
             build_variant_example(DaisyUI.SubTitle),
             build_variant_example(DaisyUI.Title),
             build_variant_example(DaisyUI.Text),
+            build_kwargs_example(
+                DaisyUI.Symbol,
+                [
+                    {"symbol": "star"},
+                    {"symbol": "done_all"},
+                    {"symbol": "dialpad"},
+                    {"symbol": "info"},
+                    {"symbol": "help"},
+                    {"symbol": "wand_stars"},
+                ],
+            ),
             build_kwargs_example(
                 DaisyUI.Input,
                 [
