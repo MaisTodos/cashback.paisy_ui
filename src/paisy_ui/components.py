@@ -116,6 +116,53 @@ class DaisyUI:
                 "text-lg", "font-bold", "flex", "flex-row", "gap-2", "items-center"
             )
 
+    class Button(VariantComponent):
+        """<button class="btn"></button>"""
+
+        base_class = "btn"
+
+        def __init__(self, *class_, **attributes):
+            if attributes.get("href"):
+                self.tag_name = "a"
+            super().__init__(*class_, **attributes)
+
+        def small(self):
+            return self.css(f"{self.base_class}-sm")
+
+        def ghost(self):
+            return self.css(f"{self.base_class}-ghost")
+
+        def dash(self):
+            return self.css(f"{self.base_class}-dash")
+
+    class Badge(VariantComponent):
+        """<span class="badge"></span>"""
+
+        tag_name = "span"
+        base_class = "badge"
+
+        def soft(self):
+            return self.css("badge-soft")
+
+        def dash(self):
+            return self.css("badge-dash")
+
+    class Alert(VariantComponent):
+        """<div class="alert"></div>"""
+
+        tag_name = "div"
+        base_class = "alert"
+
+        @property
+        def symbol(self) -> Optional[str]:
+            attr = self.attrs_pop("symbol", None)
+            return str(attr) if attr else None
+
+        def _build(self):
+            self.css("alert")
+            if self.symbol:
+                self.append(BaseComponents.Symbol(symbol=self.symbol))
+
     class Form(BaseComponents.Form):
         """<form class="flex flex-col gap-4"></form>"""
 
@@ -157,6 +204,10 @@ class DaisyUI:
 
             if self.help:
                 self.append(BaseComponents.P("label")(str(self.help)))
+
+    class Divider(BaseComponents.Div):
+        def _build(self):
+            self.css("divider")
 
     class Table(BaseComponents.Div):
         """A complete table"""
@@ -202,50 +253,6 @@ class DaisyUI:
                 ),
             )
             self.append(table)
-
-    class Button(VariantComponent):
-        """<button class="btn"></button>"""
-
-        base_class = "btn"
-
-        def __init__(self, *class_, **attributes):
-            if attributes.get("href"):
-                self.tag_name = "a"
-            super().__init__(*class_, **attributes)
-
-        def small(self):
-            return self.css(f"{self.base_class}-sm")
-
-        def ghost(self):
-            return self.css(f"{self.base_class}-ghost")
-
-        def dash(self):
-            return self.css(f"{self.base_class}-dash")
-
-    class Badge(VariantComponent):
-        """<span class="badge"></span>"""
-
-        tag_name = "span"
-        base_class = "badge"
-
-        def soft(self):
-            return self.css("badge-soft")
-
-    class Alert(VariantComponent):
-        """<div class="alert"></div>"""
-
-        tag_name = "div"
-        base_class = "alert"
-
-        @property
-        def symbol(self) -> Optional[str]:
-            attr = self.attrs_pop("symbol", None)
-            return str(attr) if attr else None
-
-        def _build(self):
-            self.css("alert")
-            if self.symbol:
-                self.append(BaseComponents.Symbol(symbol=self.symbol))
 
     # <div class="mockup-code w-full">
     #   <pre data-prefix="$"><code>npm i daisyui</code></pre>

@@ -1,4 +1,4 @@
-from .base import BaseComponents
+from .base import BaseComponent, BaseComponents
 from .components import DaisyUI
 
-__all__ = ["BaseComponents", "DaisyUI"]
+__all__ = ["BaseComponent", "BaseComponents", "DaisyUI"]

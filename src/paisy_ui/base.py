@@ -102,4 +102,3 @@ class BaseComponents:
         def _build(self):
             self.css("material-symbols-outlined")
             self.append(self.symbol)
-            self.append(self.symbol)
