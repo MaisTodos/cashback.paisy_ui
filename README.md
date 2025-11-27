@@ -30,6 +30,10 @@ pip install paisy_ui
 
 ## ⚙️ Usage
 
+### Showcase
+
+Checkout the [Complete Showcase](https://maistodos.github.io/cashback.paisy_ui/showcase.html)
+
 ### Basic Concepts
 
 There are two component classes available:

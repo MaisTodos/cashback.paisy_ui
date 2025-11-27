@@ -136,5 +136,5 @@ if __name__ == "__main__":
             ),
         )
     )
-    with open("examples/showcase.html", "w+") as file:
+    with open("examples/index.html", "w+") as file:
         file.write(str(page))
