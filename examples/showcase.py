@@ -3,6 +3,7 @@ from typing import List, Type
 from paisy_ui import BaseComponent, BaseComponents, DaisyUI
 
 BASE_VARIANTS = [
+    "neutral",
     "primary",
     "secondary",
     "success",
@@ -36,7 +37,11 @@ def build_variant_example(
     component_code = component.__name__
     variants_code = "\n".join(
         [
-            f'    DaisyUI.{component_code}({kwargs_code}).{variant}()("{variant.title()}")'
+            (
+                f'    DaisyUI.{component_code}({kwargs_code}).{variant}()("{variant.title()}")'
+                if variant != "neutral"
+                else f'    DaisyUI.{component_code}({kwargs_code})("{variant.title()}")'
+            )
             for variant in variants
         ]
     )
@@ -44,14 +49,17 @@ def build_variant_example(
         f"""
     from paisy_ui import DaisyUI
 
-    DaisyUI.{component_code}({kwargs_code})("Default")
+    ...
 {variants_code}
         """
     )
 
     grid = DaisyUI.LayoutGrid("h-min", "p-4", "bg-base-300", "rounded-lg")
     for variant in variants:
-        grid.append(getattr(component(**kwargs), variant)()(variant.title()))
+        if variant == "neutral":
+            grid.append(component(**kwargs)(variant.title()))
+        else:
+            grid.append(getattr(component(**kwargs), variant)()(variant.title()))
 
     return build_card(title=component_code, code=code, grid=grid)
 
@@ -74,6 +82,7 @@ def build_kwargs_example(component: Type[BaseComponent], kwargs_list: List[dict]
         f"""
     from paisy_ui import DaisyUI
 
+    ...
 {variants_code}
         """
     )
@@ -99,7 +108,9 @@ if __name__ == "__main__":
                 DaisyUI.Button, variants=[*BASE_VARIANTS, "ghost", "dash"]
             ),
             build_variant_example(
-                DaisyUI.Alert, variants=["success", "warning", "error"], symbol="info"
+                DaisyUI.Alert,
+                variants=["neutral", "success", "warning", "error"],
+                symbol="info",
             ),
             DaisyUI.Divider()("Typography"),
             build_variant_example(DaisyUI.SubTitle),
@@ -121,6 +132,15 @@ if __name__ == "__main__":
                 [
                     {
                         "type": "number",
+                    },
+                    {
+                        "type": "email",
+                    },
+                    {
+                        "type": "date",
+                    },
+                    {
+                        "type": "number",
                         "legend": "Number",
                         "symbol": "dialpad",
                         "help": "A value between 1 and 10",
@@ -138,9 +158,6 @@ if __name__ == "__main__":
                         "legend": "Birthdate",
                         "symbol": "cake",
                         "help": "This is the help",
-                    },
-                    {
-                        "type": "text",
                     },
                 ],
             ),
