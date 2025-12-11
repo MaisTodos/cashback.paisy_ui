@@ -1,0 +1,200 @@
+from dataclasses import dataclass
+from typing import List, Optional, Union
+
+from ..core import PUIComponentABC, Tag
+from ..mixins import PUIBorderMixin, PUILayoutMixin, PUIVariantMixin
+from ..utils import generate_unique_id, parse_html
+
+# TODO: Implement
+# class PUIAccordion(PUIComponentABC):
+#     pass
+
+
+class PUIAvatar(PUIComponentABC, PUILayoutMixin, PUIBorderMixin):
+    """
+    <div class="avatar">
+        <div class="w-24 rounded-full">
+            <img src="" />
+        </div>
+    </div>
+    """
+
+    def __init__(self, *classes, src: str, **attributes):
+        super().__init__(*classes, **attributes)
+        img = self.tag.find("img")
+        if not img:
+            raise Exception("Build error")
+        img.attrs.update(src=src)
+
+    @property
+    def online(self):
+        self.css("avatar-online")
+        return self
+
+    @property
+    def offline(self):
+        self.css("avatar-offline")
+        return self
+
+
+class PUIBadge(PUIComponentABC, PUIBorderMixin, PUILayoutMixin, PUIVariantMixin):
+    """<span class="badge">[[content]]</span>"""
+
+    _variant_prefix = "badge"
+
+
+class PUICard(PUIComponentABC, PUIBorderMixin, PUILayoutMixin):
+    """
+    <div class="card bg-base-100 w-96 shadow-sm">
+        <div class="card-body">[[content]]</div>
+    </div>
+    """
+
+    def __init__(self, *classes, **attributes):
+        super().__init__(*classes, **attributes)
+
+    def image_full(self, img_src: str) -> "PUICard":
+        self.css("image-full")
+        img, _ = parse_html(
+            f"""
+        <figure>
+            <img src="{img_src}" alt="Shoes" />
+        </figure>
+        """
+        )
+        if not self.wrapper:
+            raise Exception("Build Error")
+        self.wrapper.insert_before(img)
+        return self
+
+
+class PUICarouselABC(PUIComponentABC):
+    """
+    <div class="carousel w-full rounded">[[content]]</div>
+    """
+
+    def __init__(self, *classes, items: List[Tag], **attributes):
+        super().__init__(*classes, **attributes)
+        if not self.wrapper:
+            raise Exception("Build Error")
+        for index, tag in enumerate(items):
+            item = self.build_item(tag=tag, index=index)
+            self.wrapper.append(item)
+
+    def build_item(self, tag: Tag, index: int = 0) -> Tag:
+        item, _ = parse_html(
+            f"""<div id="slide{index}" class="carousel-item relative w-full"></div>"""
+        )
+        item.append(tag)
+        return tag
+
+
+class PUIImgCarousel(PUICarouselABC):
+    """
+    <div class="carousel w-full">[[content]]</div>
+    """
+
+    def __init__(self, *classes, img_srcs: List[str], **attributes):
+        items = []
+        for index, img_src in enumerate(img_srcs):
+            item, _ = parse_html(
+                f"""
+            <div id="slide{index}" class="carousel-item relative w-full">
+                <img src="{img_src}" class="w-full" />
+                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                <a href="#slide{index-1}" class="btn btn-circle">❮</a>
+                <a href="#slide{index+1}" class="btn btn-circle">❯</a>
+                </div>
+            </div>"""
+            )
+            items.append(item)
+
+        super().__init__(
+            *classes,
+            items=items,
+            **attributes,
+        )
+
+
+class PUICollapse(PUIComponentABC, PUIBorderMixin, PUILayoutMixin):
+    """
+    <div tabindex="0" class="collapse collapse-arrow">
+        <div class="collapse-content text-sm">[[content]]</div>
+    </div>
+    """
+
+    def __init__(self, *classes, title: str, **attributes):
+        super().__init__(*classes, **attributes)
+        if not self.wrapper:
+            raise Exception("Build Error")
+        collapse_title, _ = parse_html(
+            f'<div class="collapse-title font-semibold">{title}</div>'
+        )
+        self.wrapper.insert_before(collapse_title)
+
+
+class PUICountdown(PUIComponentABC):
+    """
+    <span class="countdown">
+    </span>
+    """
+
+    @dataclass
+    class Value:
+        value: int
+        sufix: Optional[str] = None
+
+    def __init__(
+        self, *classes, values: List[Value], id: Optional[str] = None, **attributes
+    ):
+        id = id if id else generate_unique_id()
+        attributes.update(id=id)
+        super().__init__(*classes, **attributes)
+        for value in values:
+            span, _ = parse_html(
+                f'<span style="--value:{value.value};" aria-live="polite" aria-label="{value.value}">{value.value}</span>'
+            )
+            self.tag.append(span)
+            if value.sufix:
+                self.tag.append(value.sufix)
+
+
+# TODO: Implementar
+# class PUIDiff(PUIComponentABC):
+#     pass
+
+
+class PUIHover3dCard(PUIComponentABC):
+    """
+    <div class="hover-3d mx-auto">
+        <!-- content -->
+        <figure class="max-w-100 rounded-2xl">
+            <img src="" alt="3D card" />
+        </figure>
+        <!-- 8 empty divs needed for the 3D effect -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    """
+
+    def __init__(self, *classes, img_src: str, **attributes):
+        super().__init__(*classes, **attributes)
+        img = self.tag.find("img")
+        if not img:
+            raise Exception("Build error")
+        img.attrs.update(src=img_src)
+
+
+# TODO: Implementar
+# class PUIHoverGallery(PUIComponentABC):
+#     pass
+
+
+class PUIKbd(PUIComponentABC):
+    """<kbd class="kbd"></kbd>"""

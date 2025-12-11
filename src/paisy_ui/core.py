@@ -1,78 +1,63 @@
-from abc import abstractmethod
-from typing import Optional
+from abc import ABC, abstractmethod
+from typing import Optional, Union
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import Tag
 
-_bs = BeautifulSoup(features="html")
+from .utils import add_css, parse_attributes_dict, parse_html
 
 
-class BaseComponent(Tag):
-    tag_name: Optional[str] = None
+class PUIComponentABC(ABC):
+    tag: Tag
+    wrapper: Optional[Tag] = None
 
-    def __init__(self, *class_, **attributes):
-        self.__popped_attrs = {}
-        tag_name = self.tag_name if self.tag_name else self.__class__.__name__.lower()
-        attrs = (
-            {
-                key.strip("_").replace("_", "-"): value
-                for key, value in attributes.items()
-            }
-            if attributes
-            else dict()
-        )
-        if class_:
-            attrs["class"] = " ".join([c for c in class_ if type(c) == str])
+    def __init__(self, *classes, **attributes):
+        raw_html = self.__doc__
+        if not raw_html:
+            raise NotImplementedError(
+                f"{self.__class__.__name__} without __doc__ defined"
+            )
+        tag, wrapper = parse_html(raw_html)
+        self.tag = tag
+        self.wrapper = wrapper
+        attrs = parse_attributes_dict(attributes=attributes)
+        self.tag.attrs.update(**attrs)
+        self.css(*classes)
 
-        super().__init__(
-            parser=_bs,
-            name=tag_name,
-            attrs=attrs,
-        )
-        self._build()
+    def __str__(self) -> str:
+        return self.tag.prettify(formatter="html5")
 
-    def _build(self):
-        pass
+    def _append(self, child: Union[str, "Tag"]):
+        if self.wrapper is not None:
+            self.wrapper.append(child)
+        else:
+            self.tag.append(child)
+
+    def append(self, child: Union[str, int, float, "PUIComponentABC"]):
+        if isinstance(child, PUIComponentABC):
+            self._append(child.tag)
+        elif isinstance(child, str):
+            self._append(child)
+        elif isinstance(child, int) or isinstance(child, float):
+            self._append(str(child))
+        else:
+            raise ValueError(f"Can not append {child} to {self}")
+
+    def __getitem__(self, children):
+        if isinstance(children, tuple):
+            _children = children
+        else:
+            _children = (children,)
+
+        for child in _children:
+            self.append(child)
+        return self
 
     def css(self, *classes):
-        _class = self.attrs.get("class", "")
-        _classes = [_class, *classes]
-        self.attrs["class"] = " ".join(_classes).strip()
-        return self
-
-    def attrs_pop(self, attribute_name: str, default=None):
-        if not attribute_name in self.__popped_attrs:
-            self.__popped_attrs[attribute_name] = self.attrs.pop(
-                attribute_name, default
-            )
-        value = self.__popped_attrs.get(attribute_name, default)
-        return value
-
-    def __call__(self, *components: "Tag | str"):
-        for c in components:
-            if c is None:
-                continue
-            self.append(c)
+        add_css(self.tag, *classes)
         return self
 
 
-class SelfClosingBaseComponent(BaseComponent):
-    @property
-    def is_empty_element(self) -> bool:
-        return True
-
-
-class WrapperComponent(BaseComponent):
-    wrapper: BaseComponent
-
-    def __init__(self, *class_, **attributes):
-        super().__init__(*class_, **attributes)
-        self._build_wrapper()
-
-    def __call__(self, *components: Tag | str):
-        for c in components:
-            self.wrapper.append(c)
-        return self
-
+class PUIStyleMixinABC(ABC):
     @abstractmethod
-    def _build_wrapper(self):
-        raise NotImplementedError
+    def css(self, *classes):
+        pass
