@@ -36,3 +36,13 @@ class PUITextSizeMixin(PUIStyleMixinABC):
     def text_4xl(self):
         self.css("text-4xl")
         return self
+
+    @property
+    def text_5xl(self):
+        self.css("text-5xl")
+        return self
+
+    @property
+    def text_6xl(self):
+        self.css("text-6xl")
+        return self

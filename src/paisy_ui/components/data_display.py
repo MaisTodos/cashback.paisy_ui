@@ -3,7 +3,8 @@ from typing import List, Optional, Union
 
 from ..core import PUIComponentABC, Tag
 from ..mixins import PUIBorderMixin, PUILayoutMixin, PUIVariantMixin
-from ..utils import generate_unique_id, parse_html
+from ..utils import add_css, generate_unique_id, parse_html
+from .base import PUISymbol
 
 # TODO: Implement
 # class PUIAccordion(PUIComponentABC):
@@ -45,7 +46,7 @@ class PUIBadge(PUIComponentABC, PUIBorderMixin, PUILayoutMixin, PUIVariantMixin)
 
 class PUICard(PUIComponentABC, PUIBorderMixin, PUILayoutMixin):
     """
-    <div class="card bg-base-100 w-96 shadow-sm">
+    <div class="card card-border bg-base-100 w-96 shadow-sm">
         <div class="card-body">[[content]]</div>
     </div>
     """
@@ -169,6 +170,26 @@ class PUIHover3dCard(PUIComponentABC):
     <div class="hover-3d mx-auto">
         <!-- content -->
         <figure class="max-w-100 rounded-2xl">
+            [[content]]
+        </figure>
+        <!-- 8 empty divs needed for the 3D effect -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    """
+
+
+class PUIHover3dCardImg(PUIComponentABC):
+    """
+    <div class="hover-3d mx-auto">
+        <!-- content -->
+        <figure class="max-w-100 rounded-2xl">
             <img src="" alt="3D card" />
         </figure>
         <!-- 8 empty divs needed for the 3D effect -->
@@ -198,3 +219,92 @@ class PUIHover3dCard(PUIComponentABC):
 
 class PUIKbd(PUIComponentABC):
     """<kbd class="kbd"></kbd>"""
+
+
+class PUIList(PUIComponentABC):
+    """<ul class="list rounded-box shadow-md">[[content]]</ul>"""
+
+    def __init__(self, *classes, title: Optional[str] = None, **attributes):
+        super().__init__(*classes, **attributes)
+        if title:
+            li_title, _ = parse_html(
+                f'<li class="p-4 pb-2 text-xs opacity-60 tracking-wide">{title}</li>'
+            )
+            self.tag.append(li_title)
+
+    def _format_child(self, child: str | int | float | PUIComponentABC) -> Tag:
+        tag = super()._format_child(child)
+        return add_css(tag, "list-row")
+
+
+class PUIStat(PUIComponentABC, PUIVariantMixin):
+    """
+    <div class="stats shadow">
+        <div class="stat">
+            [[content]]
+            <div class="stat-title"></div>
+            <div class="stat-value"></div>
+            <div class="stat-desc"></div>
+        </div>
+    </div>
+    """
+
+    _variant_prefix = "text"
+
+    @property
+    def title(self) -> Tag:
+        _title = self.tag.find(attrs={"class": "stat-title"})
+        if not _title:
+            raise Exception("Build Error")
+        return _title
+
+    @property
+    def value(self) -> Tag:
+        _value = self.tag.find(attrs={"class": "stat-value"})
+        if not _value:
+            raise Exception("Build Error")
+        return _value
+
+    @property
+    def desc(self) -> Tag:
+        _desc = self.tag.find(attrs={"class": "stat-desc"})
+        if not _desc:
+            raise Exception("Build Error")
+        return _desc
+
+    @property
+    def figure(self) -> Optional[Tag]:
+        return self.tag.find(attrs={"class": "stat-figure"})
+
+    def __init__(
+        self,
+        *classes,
+        title: str,
+        value: str,
+        desc: str,
+        symbol: Optional[str] = None,
+        **attributes,
+    ):
+        super().__init__(*classes, **attributes)
+        if symbol:
+            _symbol_wrapper, _ = parse_html('<div class="stat-figure"></div>')
+            if not self.wrapper:
+                raise Exception("Build error")
+            self.wrapper.append(
+                PUISymbol(symbol=symbol).text_4xl.tag.wrap(_symbol_wrapper)
+            )
+        self.title.append(title)
+        self.value.append(value)
+        self.desc.append(desc)
+
+    def css(self, *classes):
+        if self.figure:
+            add_css(self.figure, *classes)
+        add_css(self.value, *classes)
+        return self
+
+
+class PUIStatus(PUIComponentABC, PUIVariantMixin):
+    """<div class="status"></div>"""
+
+    _variant_prefix = "status"

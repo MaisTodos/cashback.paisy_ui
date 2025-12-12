@@ -1,14 +1,12 @@
 from ..core import PUIComponentABC
-from ..mixins import PUIBorderMixin, PUIColorsMixins, PUILayoutMixin
+from ..mixins import PUIBorderMixin, PUIColorsMixins, PUILayoutMixin, PUITextSizeMixin
 
 
 class PUIHTML(PUIComponentABC):
     """
-    <html>
+    <html class="preload">
     <head>
         <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-            rel="stylesheet" type="text/css" />
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <script type="module">
             import { codeToHtml, createHighlighter } from 'https://esm.sh/shiki@3.0.0'
@@ -21,6 +19,35 @@ class PUIHTML(PUIComponentABC):
             .shiki {
                 background: transparent !important;
             }
+            @font-face {
+                font-family: 'Material Symbols Outlined';
+                font-style: normal;
+                font-weight: 100 700;
+                src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v303/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2) format('woff2');
+            }
+
+            .material-symbols-outlined {
+                font-family: 'Material Symbols Outlined';
+                font-weight: normal;
+                font-style: normal;
+                line-height: 1;
+                letter-spacing: normal;
+                text-transform: none;
+                display: inline-block;
+                white-space: nowrap;
+                word-wrap: normal;
+                direction: ltr;
+                -webkit-font-feature-settings: 'liga';
+                -webkit-font-smoothing: antialiased;
+            }
+
+            html.preload body > * {
+                opacity: 0;
+            }
+            html:not(.preload) body > * {
+                transition: opacity .3s ease;
+            }
+
         </style>
     </head>
 
@@ -72,10 +99,29 @@ class PUIHTML(PUIComponentABC):
                 updateCountdowns();
             }, 1000)
         }
+        const setTheme = (theme) => {
+            document.documentElement.setAttribute("data-theme", theme);
+            localStorage.setItem("theme", theme)
+        }
+
+        const themeSaved = localStorage.getItem("theme");
+        const themePrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const themeDefault = themePrefersDark ? "dark" : "light";
+        const theme = themeSaved || themeDefault;
+        setTheme(theme);
 
         window.addEventListener('load', () => {
             setUpdateCountdowndsInterval();
+            document.documentElement.classList.remove('preload');
+
+            const themeToggle = document.querySelector('input.theme-controller[type="checkbox"]');
+            themeToggle.checked = theme == "dark";
+            themeToggle.addEventListener('change', (ev) => {
+                setTheme(ev.target.checked ? 'dark' : 'light');
+            })
         });
+
+
     </script>
     </body>
     </html>
@@ -86,9 +132,27 @@ class PUIDiv(PUIComponentABC, PUIColorsMixins, PUILayoutMixin, PUIBorderMixin):
     """<div></div>"""
 
 
-class PUIText(PUIComponentABC, PUIColorsMixins, PUILayoutMixin, PUIBorderMixin):
+class PUIText(
+    PUIComponentABC, PUIColorsMixins, PUILayoutMixin, PUIBorderMixin, PUITextSizeMixin
+):
     """<p></p>"""
 
 
 class PUITitle(PUIComponentABC, PUIColorsMixins, PUILayoutMixin, PUIBorderMixin):
     """<h5 class="font-bold text-xl"></h5>"""
+
+
+class PUIImg(PUIComponentABC):
+    """<img src="">"""
+
+    def __init__(self, *classes, src: str, **attributes):
+        super().__init__(*classes, **attributes)
+        self.tag.attrs.update(src=src)
+
+
+class PUISymbol(PUIComponentABC, PUIColorsMixins, PUILayoutMixin, PUITextSizeMixin):
+    """<span class="material-symbols-outlined"></span>"""
+
+    def __init__(self, *classes, symbol: str, **attributes):
+        super().__init__(*classes, **attributes)
+        self.tag.append(symbol)

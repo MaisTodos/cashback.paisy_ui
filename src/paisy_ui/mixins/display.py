@@ -24,12 +24,12 @@ class PUIDisplayMixin(PUIStyleMixinABC):
 
     @property
     def display_flex_col(self):
-        self.css("flex flex-col gap-4")
+        self.css("flex flex-col")
         return self
 
     @property
     def display_flex_row(self):
-        self.css("flex flex-row gap-4")
+        self.css("flex flex-row")
         return self
 
     @property
@@ -40,6 +40,11 @@ class PUIDisplayMixin(PUIStyleMixinABC):
     @property
     def justify_center(self):
         self.css("justify-center")
+        return self
+
+    @property
+    def justify_between(self):
+        self.css("justify-between")
         return self
 
     @property

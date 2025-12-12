@@ -32,15 +32,19 @@ class PUIComponentABC(ABC):
         else:
             self.tag.append(child)
 
-    def append(self, child: Union[str, int, float, "PUIComponentABC"]):
+    def _format_child(self, child: Union[str, int, float, "PUIComponentABC"]) -> Tag:
         if isinstance(child, PUIComponentABC):
-            self._append(child.tag)
-        elif isinstance(child, str):
-            self._append(child)
-        elif isinstance(child, int) or isinstance(child, float):
-            self._append(str(child))
+            return child.tag
+        elif (
+            isinstance(child, str) or isinstance(child, int) or isinstance(child, float)
+        ):
+            tag, _ = parse_html(f"<span>{child}</span>")
+            return tag
         else:
             raise ValueError(f"Can not append {child} to {self}")
+
+    def append(self, child: Union[str, int, float, "PUIComponentABC"]):
+        self._append(self._format_child(child=child))
 
     def __getitem__(self, children):
         if isinstance(children, tuple):
