@@ -1,22 +1,30 @@
 # 🌻 PaisyUI
 
-A simple, extensible DaisyUI HTML renderer built on top of `bs4` — directly from Python.
+**PaisyUI** is a simple, extensible HTML renderer for **DaisyUI**, built entirely in **Python** on top of `BeautifulSoup (bs4)`.
+
+It allows you to build modern, component-based UIs **without templates, Node.js, or frontend build tools** — directly from Python.
 
 ![demo](./demo.png)
 
+---
+
 ## ✨ Why PaisyUI?
 
-`paisy_ui` is a lightweight `42.6 kb` Python package powered by `BeautifulSoup` (`bs4`) that allows you to stop worrying about HTML templates and templating engines. By leveraging the beautiful [DaisyUI](https://daisyui.com) CSS framework, it makes UI building smoother and more intuitive.
+`paisy_ui` is a lightweight Python package (~42.6 KB) that removes the need for HTML templates and templating engines.
+By leveraging the excellent [DaisyUI](https://daisyui.com) component system, it makes UI construction intuitive, expressive, and Pythonic.
 
-PaisyUI offers:
+### Key features
 
-- **100% pure Python** — no Node.js or frontend tooling required  
-- **Fully extensible** — easily build custom components with custom behavior  
-- **Compatible with any HTTP framework**, including:
-  - [FastAPI](https://fastapi.tiangolo.com)  
-  - [Flask](https://flask.palletsprojects.com/en/stable/)  
-  - [Django](https://www.djangoproject.com/)  
-- **CLI support** — generate HTML directly from your terminal (*⚙️ Work in Progress*)
+* **100% pure Python** — no Node.js, bundlers, or frontend tooling
+* **Component-based API** inspired by modern UI frameworks
+* **Fully extensible** — create custom components with custom behavior
+* **Framework-agnostic** — works with:
+
+  * FastAPI
+  * Flask
+  * Django
+  * Any HTTP framework that returns HTML
+* **CLI support** — generate HTML from the terminal (*⚙️ Work in progress*)
 
 ---
 
@@ -30,30 +38,39 @@ pip install paisy_ui
 
 ## ⚙️ Usage
 
-### Showcase
+### 🔎 Showcase
 
-Checkout the [Complete Showcase](https://maistodos.github.io/cashback.paisy_ui/examples)
+Check out the **complete component showcase**:
 
-### Basic Concepts
+👉 [Components Showcase](https://maistodos.github.io/cashback.paisy_ui/examples)
 
-There are two component classes available:
+---
 
-- **BaseComponents** – raw HTML components without predefined classes or behaviors.
-- **DaisyUI** – higher-level components styled with DaisyUI classes and/or made from multiple HTML elements.
+## 🧠 Core Concepts
 
-Every component’s constructor accepts:
+Every component constructor supports:
 
-- **CSS classes** as positional arguments  
-- **HTML attributes** as keyword arguments  
+* **CSS classes** as positional arguments
+* **HTML attributes** as keyword arguments
+* **Child components or text** via `__getitem__`
 
-> Some DaisyUI components may also extract special attributes such as `title`, `menu_items`, and more.
+```python
+component = ComponentClass(*classes, **attributes)[
+    ChildComponent(),
+    "Plain text is allowed too",
+]
+```
 
-All components inherit the `__call__` behavior from `BaseComponent`, which allows you to define children like this:
+> You don’t need a `PUIText` component for simple text — strings are rendered automatically.
+
+---
+
+## 🧩 Basic Example
 
 ```python
 from paisy_ui.components import PUIDiv, PUIText, PUIButton
 
-foo = PUIDiv(style="padding:8px; background:red;")[
+layout = PUIDiv(style="padding:8px; background:red;")[
     PUIDiv(style="padding:8px; background:green;")[
         PUIDiv(style="padding:8px; background:blue;")[
             PUIDiv(style="padding:8px; background:yellow;")[
@@ -67,34 +84,40 @@ foo = PUIDiv(style="padding:8px; background:red;")[
     ]
 ]
 
-print(foo)
-"""
+print(layout)
+```
+
+Output:
+
+```html
 <div style="padding: 8px; background: red">
-    <div style="padding: 8px; background: green">
-        <div style="padding: 8px; background: blue">
-            <div style="padding: 8px; background: yellow">
-                <div style="padding: 8px; background: pink">
-                    <p>Hello World</p>
-                    <p>This is another text</p>
-                    <button onclick="alert('ok')">Ok</button>
-                </div>
-            </div>
+  <div style="padding: 8px; background: green">
+    <div style="padding: 8px; background: blue">
+      <div style="padding: 8px; background: yellow">
+        <div style="padding: 8px; background: pink">
+          <p>Hello World</p>
+          <p>This is another text</p>
+          <button onclick="alert('ok')">Ok</button>
         </div>
+      </div>
     </div>
+  </div>
 </div>
-"""
 ```
 
 ---
 
+## 📦 Custom Components
 
-### 📦 PUIBaseComponentABC Example
+You can create custom components by subclassing `PUIComponentABC`.
 
-You can use `PUIBaseComponentABC` to create custom HTML structures or extend them to define components with custom behavior:
+### Rules
+
+* The component’s **HTML structure must be defined in the docstring**
+* `[[content]]` is replaced by child components
 
 ```python
 from paisy_ui import PUIComponentABC
-
 from paisy_ui.components import PUIHTML
 
 class CustomComponent(PUIComponentABC):
@@ -102,206 +125,148 @@ class CustomComponent(PUIComponentABC):
 
     def __init__(self, *classes, **attributes):
         super().__init__(*classes, **attributes)
-        self.css('text-primary')
+        self.css("text-primary")
+```
 
+Usage:
 
+```python
 page = PUIHTML()[
     "Hello World!",
     CustomComponent()["Hello!"]
 ]
 
 print(page)
+```
 
-"""
-<html>
-    <head>
-        ...
-    </head>
-    <body>
-        ...
-        <span>Hello World!</span>
-        <span class="text-primary">Hello!</span>
-        ...
-    </body>
+Output:
+
+```html
+<span>Hello World!</span>
+<span class="text-primary">Hello!</span>
+```
+
+> 💡 Tip: Explore `paisy_ui.mixins` to quickly add reusable styling behaviors.
+
+---
+
+## 🌻 DaisyUI Integration
+
+All built-in components assume that **DaisyUI is already loaded**.
+
+The `PUIHTML` component abstracts:
+
+* `<html>`, `<head>`, and `<body>`
+* Automatically injects CDNs for:
+
+  * DaisyUI
+  * TailwindCSS
+  * Shiki (syntax highlighting)
+  * Material Symbols Outlined
+
+```python
+from paisy_ui.components import PUIHTML, PUIDivider, PUIText
+
+page = PUIHTML()[
+    PUIText("Hello world!"),
+    PUIDivider(content="Divider"),
+    PUIText("Hello!"),
+]
+
+print(page)
+```
+
+Output (simplified):
+
+```html
+<html class="preload">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+
+  <body>
+    <p>Hello world!</p>
+    <div class="divider">Divider</div>
+    <p>Hello!</p>
+  </body>
 </html>
-"""
+```
+
+> Additional JavaScript and CSS are injected automatically to ensure proper component behavior.
+
+---
+
+## 🎨 Styling & Variants
+
+### CSS Classes
+
+All components accept CSS classes as positional arguments:
+
+```python
+PUIText("text-lg", "font-bold")["Hello"]
 ```
 
 ---
 
-### 🌻 DaisyUI Example
+### ✨ Variant Properties (Mixins)
 
-> This section is still being updated, checkout the `examples/showcase.py`
+Many components expose **styling variants as properties**, powered by `paisy_ui.mixins`.
 
-`DaisyUI` components provide convenient abstractions for complex structures:
-
-> *It also automatically imports [DaisyUI](https://daisyui.com/) and [Google Material Symbols](https://fonts.google.com/icons?icon.query=unk) using `CDN`.*
+Example:
 
 ```python
-from paisy_ui import DaisyUI
+from paisy_ui.components import PUIText, PUIButton
 
-page = DaisyUI.HTML()(
-    DaisyUI.LayoutNavbar(
-        title="Test",
-        menu_items=[
-            DaisyUI.LayoutNavbar.MenuItem(label="Home", href="/home", symbol="home"),
-            DaisyUI.LayoutNavbar.MenuItem(label="Users", href="/users", symbol="groups"),
-            DaisyUI.LayoutNavbar.MenuItem(label="Tasks", href="/tasks", symbol="done_all"),
-        ],
-    )(
-        DaisyUI.Modal(id="myModal")(
-            DaisyUI.Title().primary()("Modal Title"),
-            DaisyUI.Text()("Modal content")
-        ),
-        DaisyUI.Alert(symbol="done_all").success()("Everything ok!"),
-        DaisyUI.Card()(
-            DaisyUI.Title()("Card Title"),
-            DaisyUI.Text()("Card Content"),
-            DaisyUI.Badge().primary().soft()("Foo"),
-            DaisyUI.Button(onclick="myModal.openModal()")("Open Modal"),
-        )
-    )
-)
+error_text = PUIText().error["This is an error"]
+# <p class="text-error">This is an error</p>
 
-print(page.prettify())
-'''
-<html>
-    <head>
-        <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" type="text/css" />
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
-        </script>
-        <script type="module">
-            import { codeToHtml, createHighlighter } from 'https://esm.sh/shiki@3.0.0'
-
-            document.querySelectorAll("code[data-lang='python']").forEach(async (el) => {
-                el.innerHTML = await codeToHtml(el.innerHTML, { lang: 'python', theme: 'github-dark-default' });
-            })
-        </script>
-        <style>
-            .shiki {
-                background: transparent !important;
-            }
-        </style>
-    </head>
-
-    <body data-theme="dark">
-        <main class="drawer">
-            <input class="drawer-toggle" id="drawer-toggle" type="checkbox" />
-            <div class="drawer-content flex flex-col">
-                <nav class="navbar bg-base-300 w-full">
-                    <div class="flex-none lg:hidden">
-                        <label class="btn btn-square btn-ghost" for="drawer-toggle">
-                            <span class="material-symbols-outlined" symbol="menu">
-                                menu
-                            </span>
-                        </label>
-                    </div>
-                    <div class="mx-2 flex-1 px-2 font-bold">
-                        Test
-                    </div>
-                    <ul class="menu menu-horizontal hidden lg:flex">
-                        <li class="text-base">
-                            <a href="/home">
-                                <span class="material-symbols-outlined" symbol="home">
-                                    home
-                                </span>
-                                Home
-                            </a>
-                        </li>
-                        <li class="text-base">
-                            <a href="/users">
-                                <span class="material-symbols-outlined" symbol="groups">
-                                    groups
-                                </span>
-                                Users
-                            </a>
-                        </li>
-                        <li class="text-base">
-                            <a href="/tasks">
-                                <span class="material-symbols-outlined" symbol="done_all">
-                                    done_all
-                                </span>
-                                Tasks
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="p-4 flex flex-col gap-4">
-                    <dialog class="modal" id="myModal">
-                        <div class="modal-box">
-                            <h3 class="text-xl font-bold flex flex-row gap-2 items-center text-primary">
-                                Modal Title
-                            </h3>
-                            <p class="flex flex-row gap-2 items-center">
-                                Modal content
-                            </p>
-                        </div>
-                        <form class="modal-backdrop" method="dialog">
-                            <button>
-                                Fechar
-                            </button>
-                        </form>
-                    </dialog>
-                    <div class="alert alert-success">
-                        <span class="material-symbols-outlined" symbol="done_all">
-                            done_all
-                        </span>
-                        Everything ok!
-                    </div>
-                    <div class="card border border-base-300">
-                        <div class="card-body">
-                            <h3 class="text-xl font-bold flex flex-row gap-2 items-center">
-                                Card Title
-                            </h3>
-                            <p class="flex flex-row gap-2 items-center">
-                                Card Content
-                            </p>
-                            <span class="badge badge-primary badge-soft">
-                                Foo
-                            </span>
-                            <button class="btn" onclick="myModal.openModal()">
-                                Open Modal
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="drawer-side">
-                <label aria-label="close sidebar" class="drawer-overlay" for="drawer-toggle">
-                </label>
-                <ul class="menu bg-base-200 min-h-full w-80 p-4">
-                    <li class="mb-2 font-bold">
-                        Test
-                    </li>
-                    <li class="text-base">
-                        <a href="/home">
-                            <span class="material-symbols-outlined" symbol="home">
-                                home
-                            </span>
-                            Home
-                        </a>
-                    </li>
-                    <li class="text-base">
-                        <a href="/users">
-                            <span class="material-symbols-outlined" symbol="groups">
-                                groups
-                            </span>
-                            Users
-                        </a>
-                    </li>
-                    <li class="text-base">
-                        <a href="/tasks">
-                            <span class="material-symbols-outlined" symbol="done_all">
-                                done_all
-                            </span>
-                            Tasks
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </main>
-    </body>
-</html>
-'''
+button = PUIButton().primary.ghost.sm["OK"]
+# <button class="btn btn-primary btn-ghost btn-sm">OK</button>
 ```
+
+---
+
+## 🧬 Creating Custom Variants
+
+Use `PUIVariantMixin` to define your own variant system.
+
+```python
+from paisy_ui import PUIComponentABC
+from paisy_ui.mixins import PUIVariantMixin
+
+class CustomComponent(PUIComponentABC, PUIVariantMixin):
+    """<div>[[content]]</div>"""
+
+    _variant_prefix = "foo"
+```
+
+Usage:
+
+```python
+CustomComponent().ghost["Bar"]
+# <div class="foo-ghost">Bar</div>
+
+CustomComponent().success["Bar"]
+# <div class="foo-success">Bar</div>
+
+CustomComponent().primary["Bar"]
+# <div class="foo-primary">Bar</div>
+```
+
+---
+
+## 🚀 Summary
+
+**PaisyUI** lets you:
+
+* Build DaisyUI-powered interfaces
+* Stay entirely in Python
+* Avoid HTML templates and frontend build chains
+* Extend and compose UI components freely
+
+Perfect for backend-driven UIs, internal tools, dashboards, and rapid prototyping.
+
+---
+
+🌻 *Happy hacking with PaisyUI!*

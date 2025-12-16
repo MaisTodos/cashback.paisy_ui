@@ -133,6 +133,10 @@ class PUIHTML(PUIComponentABC):
     </html>
     """
 
+    def __init__(self, *classes, **attributes):
+        super().__init__(*classes, **attributes)
+        self.wrapper = self.tag.find("body")
+
 
 class PUIDiv(
     PUIComponentABC, PUIColorsMixins, PUILayoutMixin, PUIBorderMixin, PUIFontWeightMixin

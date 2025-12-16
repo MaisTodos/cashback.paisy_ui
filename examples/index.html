@@ -1,796 +1,805 @@
 <html class="preload">
- <head>
+
+<head>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
   </script>
   <script type="module">
-   import { codeToHtml, createHighlighter } from 'https://esm.sh/shiki@3.0.0'
+    import { codeToHtml, createHighlighter } from 'https://esm.sh/shiki@3.0.0'
 
-document.querySelectorAll("code[data-lang='python']").forEach(async (el) => {
-el.innerHTML = await codeToHtml(el.innerHTML, { lang: 'python', theme: 'github-dark-default' });
-});
+    document.querySelectorAll("code[data-lang='python']").forEach(async (el) => {
+      el.innerHTML = await codeToHtml(el.innerHTML, { lang: 'python', theme: 'github-dark-default' });
+    });
   </script>
   <style>
-   .shiki {
-background: transparent !important;
-}
-@font-face {
-font-family: 'Material Symbols Outlined';
-font-style: normal;
-font-weight: 100 700;
-src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v303/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2) format('woff2');
-}
+    .shiki {
+      background: transparent !important;
+    }
 
-.material-symbols-outlined {
-font-family: 'Material Symbols Outlined';
-font-weight: normal;
-font-style: normal;
-line-height: 1;
-letter-spacing: normal;
-text-transform: none;
-display: inline-block;
-white-space: nowrap;
-word-wrap: normal;
-direction: ltr;
--webkit-font-feature-settings: 'liga';
--webkit-font-smoothing: antialiased;
-}
+    @font-face {
+      font-family: 'Material Symbols Outlined';
+      font-style: normal;
+      font-weight: 100 700;
+      src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v303/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2) format('woff2');
+    }
 
-html.preload body > * {
-opacity: 0;
-}
-html:not(.preload) body > * {
-transition: opacity .3s ease;
-}
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html.preload body>* {
+      opacity: 0;
+    }
+
+    html:not(.preload) body>* {
+      transition: opacity .3s ease;
+    }
   </style>
- </head>
- <body>
+</head>
+
+<body>
   <script>
-   let intervalUpdateCountdowns = null;
+    let intervalUpdateCountdowns = null;
 
-const shouldUpdateCountdowns = () => {
-return document.querySelectorAll('span.countdown span:not([aria-label="0"])').length > 0;
-}
-
-
-const updateCountdowns = () => {
-document.querySelectorAll('span.countdown').forEach(wrapper => {
-const segments = Array.from(wrapper.querySelectorAll('span[aria-label]'));
-if (segments.length === 0) return;
-
-for (let i = segments.length - 1; i >= 0; i--) {
-const el = segments[i];
-let currentValue = parseInt(el.getAttribute('aria-label'));
-
-if (currentValue > 0) {
-currentValue -= 1;
-el.setAttribute('aria-label', currentValue);
-el.style.setProperty('--value', currentValue);
-break;
-}
-
-if (i > 0) {
-const startValue = el.innerHTML
-el.setAttribute('aria-label', startValue);
-el.style.setProperty('--value', startValue);
-}
-}
-});
-};
+    const shouldUpdateCountdowns = () => {
+      return document.querySelectorAll('span.countdown span:not([aria-label="0"])').length > 0;
+    }
 
 
-const clearUpdateCountdownsInterval = () => {
-clearInterval(intervalUpdateCountdowns);
-intervalUpdateCountdowns = null;
-}
+    const updateCountdowns = () => {
+      document.querySelectorAll('span.countdown').forEach(wrapper => {
+        const segments = Array.from(wrapper.querySelectorAll('span[aria-label]'));
+        if (segments.length === 0) return;
 
-const setUpdateCountdowndsInterval = () => {
-intervalUpdateCountdowns = setInterval(() => {
-if(!shouldUpdateCountdowns()) {
-return clearUpdateCountdownsInterval();
-}
-updateCountdowns();
-}, 1000)
-}
-const setTheme = (theme) => {
-document.documentElement.setAttribute("data-theme", theme);
-localStorage.setItem("theme", theme)
-}
+        for (let i = segments.length - 1; i >= 0; i--) {
+          const el = segments[i];
+          let currentValue = parseInt(el.getAttribute('aria-label'));
 
-const themeSaved = localStorage.getItem("theme");
-const themePrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-const themeDefault = themePrefersDark ? "dark" : "light";
-const theme = themeSaved || themeDefault;
-setTheme(theme);
+          if (currentValue > 0) {
+            currentValue -= 1;
+            el.setAttribute('aria-label', currentValue);
+            el.style.setProperty('--value', currentValue);
+            break;
+          }
 
-window.addEventListener('load', () => {
-setUpdateCountdowndsInterval();
-document.documentElement.classList.remove('preload');
+          if (i > 0) {
+            const startValue = el.innerHTML
+            el.setAttribute('aria-label', startValue);
+            el.style.setProperty('--value', startValue);
+          }
+        }
+      });
+    };
 
-const themeToggle = document.querySelector('input.theme-controller[type="checkbox"]');
-themeToggle.checked = theme == "dark";
-themeToggle.addEventListener('change', (ev) => {
-setTheme(ev.target.checked ? 'dark' : 'light');
-})
-});
+
+    const clearUpdateCountdownsInterval = () => {
+      clearInterval(intervalUpdateCountdowns);
+      intervalUpdateCountdowns = null;
+    }
+
+    const setUpdateCountdowndsInterval = () => {
+      intervalUpdateCountdowns = setInterval(() => {
+        if (!shouldUpdateCountdowns()) {
+          return clearUpdateCountdownsInterval();
+        }
+        updateCountdowns();
+      }, 1000)
+    }
+    const setTheme = (theme) => {
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("theme", theme)
+    }
+
+    const themeSaved = localStorage.getItem("theme");
+    const themePrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const themeDefault = themePrefersDark ? "dark" : "light";
+    const theme = themeSaved || themeDefault;
+    setTheme(theme);
+
+    window.addEventListener('load', () => {
+      setUpdateCountdowndsInterval();
+      document.documentElement.classList.remove('preload');
+
+      const themeToggle = document.querySelector('input.theme-controller[type="checkbox"]');
+      themeToggle.checked = theme == "dark";
+      themeToggle.addEventListener('change', (ev) => {
+        setTheme(ev.target.checked ? 'dark' : 'light');
+      })
+    });
   </script>
- </body>
- <div class="drawer">
-  <input class="drawer-toggle" id="my-drawer-2" type="checkbox">
-  <div class="drawer-content flex flex-col">
-   <!-- Navbar -->
-   <div class="navbar bg-base-300 w-full">
-    <div class="flex-none lg:hidden">
-     <label aria-label="open sidebar" class="btn btn-square btn-ghost" for="my-drawer-2">
-      <svgxmlns="http: 2000 class="inline-block h-6 w-6 stroke-current" svg"fill="none" viewbox="0 0 24 24" www.w3.org>
-       <pathstroke-linecap="round"stroke-linejoin="round"stroke-width="2"d="m4 12h16m4 18h16" 6h16m4>
-       </pathstroke-linecap="round"stroke-linejoin="round"stroke-width="2"d="m4>
-      </svgxmlns="http:>
-     </label>
-    </div>
-    <div class="mx-2 flex-1 px-2" id="navbar-title">
-     Teste
-    </div>
-    <div class="hidden flex-none lg:block">
-     <ul class="menu menu-horizontal">
-      <li class="display-flex flex-row items-center gap-2">
-       <a href="https://google.com.br">
-        <span class="material-symbols-outlined">
-         globe
-        </span>
-        Google
-       </a>
-      </li>
-      <li class="display-flex flex-row items-center gap-2">
-       <a href="https://google.com.br">
-        <span class="material-symbols-outlined">
-         globe
-        </span>
-        Google
-       </a>
-      </li>
-      <li class="display-flex flex-row items-center gap-2">
-       <a href="https://google.com.br">
-        <span class="material-symbols-outlined">
-         globe
-        </span>
-        Google
-       </a>
-      </li>
-     </ul>
-    </div>
-   </div>
-   <div class="p-8 m-8 flex flex-row items-start justify-center gap-4">
-    <dialog class="modal" id="modal_01">
-     <div class="modal-box">
-      <div class="flex flex-col gap-4">
-       <div class="hover-3d mx-auto">
-        <!-- content -->
-        <figure class="max-w-100 rounded-2xl">
-         <div class="w-100 h-60 relative p-4 bg-primary text-primary-content grid grid-cols-2 gap-4">
-          <img class="absolute inset-0 left-15 h-full mix-blend-hard-light grayscale" src="https://i0.wp.com/parceiros.cartaodetodos.com.br/wp-content/uploads/2023/05/Sem-Titulo-1.png?fit=300%2C300&ssl=1">
-          <div class="mt-auto flex flex-col">
-           <span>
-            Alfredo da Silva
-           </span>
-           <span>
-            126748126487112
-           </span>
+  <div class="drawer">
+    <input class="drawer-toggle" id="my-drawer-2" type="checkbox">
+    <div class="drawer-content flex flex-col">
+      <!-- Navbar -->
+      <div class="navbar bg-base-300 w-full">
+        <div class="flex-none lg:hidden">
+          <label aria-label="open sidebar" class="btn btn-square btn-ghost" for="my-drawer-2">
+            <svgxmlns="http: 2000 class="inline-block h-6 w-6 stroke-current" svg"fill="none" viewbox="0 0 24 24"
+              www.w3.org>
+              <pathstroke-linecap="round"stroke-linejoin="round"stroke-width="2"d="m4 12h16m4 18h16" 6h16m4>
+              </pathstroke-linecap="round"stroke-linejoin="round"stroke-width="2"d="m4>
+            </svgxmlns="http:>
+          </label>
+        </div>
+        <div class="mx-2 flex-1 px-2" id="navbar-title">
+          Teste
+        </div>
+        <div class="hidden flex-none lg:block">
+          <ul class="menu menu-horizontal">
+            <li class="display-flex flex-row items-center gap-2">
+              <a href="https://google.com.br">
+                <span class="material-symbols-outlined">
+                  globe
+                </span>
+                Google
+              </a>
+            </li>
+            <li class="display-flex flex-row items-center gap-2">
+              <a href="https://google.com.br">
+                <span class="material-symbols-outlined">
+                  globe
+                </span>
+                Google
+              </a>
+            </li>
+            <li class="display-flex flex-row items-center gap-2">
+              <a href="https://google.com.br">
+                <span class="material-symbols-outlined">
+                  globe
+                </span>
+                Google
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="p-8 m-8 flex flex-row items-start justify-center gap-4">
+        <dialog class="modal" id="modal_01">
+          <div class="modal-box">
+            <div class="flex flex-col gap-4">
+              <div class="hover-3d mx-auto">
+                <!-- content -->
+                <figure class="max-w-100 rounded-2xl">
+                  <div class="w-100 h-60 relative p-4 bg-primary text-primary-content grid grid-cols-2 gap-4">
+                    <img class="absolute inset-0 left-15 h-full mix-blend-hard-light grayscale"
+                      src="https://i0.wp.com/parceiros.cartaodetodos.com.br/wp-content/uploads/2023/05/Sem-Titulo-1.png?fit=300%2C300&ssl=1">
+                    <div class="mt-auto flex flex-col">
+                      <span>
+                        Alfredo da Silva
+                      </span>
+                      <span>
+                        126748126487112
+                      </span>
+                    </div>
+                    <div class="mt-auto flex flex-col items-end">
+                      <span>
+                        Exp. 10/30
+                      </span>
+                      <span>
+                        CVV 12134
+                      </span>
+                    </div>
+                  </div>
+                </figure>
+                <!-- 8 empty divs needed for the 3D effect -->
+                <div>
+                </div>
+                <div>
+                </div>
+                <div>
+                </div>
+                <div>
+                </div>
+                <div>
+                </div>
+                <div>
+                </div>
+                <div>
+                </div>
+                <div>
+                </div>
+              </div>
+              <h5 class="font-bold text-xl text-primary">
+                <span>
+                  Este &eacute; o seu Cart&atilde;o!
+                </span>
+              </h5>
+              <p class>
+                <span>
+                  Muito legal n&eacute;?
+                </span>
+              </p>
+              <ul class="list rounded-box shadow-md">
+                <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">
+                  &Uacute;ltimas Transa&ccedil;&otilde;es
+                </li>
+                <div class="flex flex-row items-center justify-between list-row">
+                  <span>
+                    15/12/2025
+                  </span>
+                  <div class="flex flex-row items-center gap-2 text-success font-bold">
+                    <span>
+                      R$ 20.00
+                    </span>
+                    <span class="material-symbols-outlined">
+                      more_up
+                    </span>
+                  </div>
+                </div>
+                <div class="flex flex-row items-center justify-between list-row">
+                  <span>
+                    14/12/2025
+                  </span>
+                  <div class="flex flex-row items-center gap-2 text-error font-bold">
+                    <span>
+                      - R$ 34.00
+                    </span>
+                    <span class="material-symbols-outlined">
+                      more_down
+                    </span>
+                  </div>
+                </div>
+                <div class="flex flex-row items-center justify-between list-row">
+                  <span>
+                    13/12/2025
+                  </span>
+                  <div class="flex flex-row items-center gap-2 text-success font-bold">
+                    <span>
+                      R$ 21.00
+                    </span>
+                    <span class="material-symbols-outlined">
+                      more_up
+                    </span>
+                  </div>
+                </div>
+                <div class="flex flex-row items-center justify-between list-row">
+                  <span>
+                    12/12/2025
+                  </span>
+                  <div class="flex flex-row items-center gap-2 text-error font-bold">
+                    <span>
+                      - R$ 11.00
+                    </span>
+                    <span class="material-symbols-outlined">
+                      more_down
+                    </span>
+                  </div>
+                </div>
+                <div class="flex flex-row items-center justify-between list-row">
+                  <span>
+                    11/12/2025
+                  </span>
+                  <div class="flex flex-row items-center gap-2 text-success font-bold">
+                    <span>
+                      R$ 5.00
+                    </span>
+                    <span class="material-symbols-outlined">
+                      more_up
+                    </span>
+                  </div>
+                </div>
+                <div class="flex flex-row items-center justify-between list-row">
+                  <span>
+                    10/12/2025
+                  </span>
+                  <div class="flex flex-row items-center gap-2 text-success font-bold">
+                    <span>
+                      R$ 8.90
+                    </span>
+                    <span class="material-symbols-outlined">
+                      more_up
+                    </span>
+                  </div>
+                </div>
+              </ul>
+              <button class="btn btn-primary btn-soft">
+                <span>
+                  Hist&oacute;rico de Completo
+                </span>
+              </button>
+              <button class="btn btn-primary btn-dash">
+                <span>
+                  Bloquear Cart&atilde;o
+                </span>
+              </button>
+            </div>
           </div>
-          <div class="mt-auto flex flex-col items-end">
-           <span>
-            Exp. 10/30
-           </span>
-           <span>
-            CVV 12134
-           </span>
+          <form class="modal-backdrop" method="dialog">
+            <button>
+              close
+            </button>
+          </form>
+        </dialog>
+        <div class="toast z-99 toast-end">
+          <div class="alert alert-primary">
+            <span>
+              Isso &eacute; uma mensagem
+            </span>
           </div>
-         </div>
-        </figure>
-        <!-- 8 empty divs needed for the 3D effect -->
-        <div>
+          <div class="alert alert-error">
+            <span>
+              Isso &eacute; um erro
+            </span>
+          </div>
         </div>
-        <div>
+        <div class="flex flex-col gap-4">
+          <label class="swap swap-rotate">
+            <input class="theme-controller" type="checkbox" value="dark">
+            <svg class="swap-off h-10 w-10 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z">
+              </path>
+            </svg>
+            <svg class="swap-on h-10 w-10 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z">
+              </path>
+            </svg>
+          </label>
+          <span class="text-rotate text-7xl leading-[2]">
+            <span class="justify-items-center">
+              <span>
+                10% CASHBACK
+              </span>
+              <span>
+                CASHBACK ESPECIAL
+              </span>
+            </span>
+          </span>
+          <div class="flex flex-row gap-4">
+            <span class="loading loading-sm text-primary loading-spinner">
+            </span>
+            <span class="loading loading-md text-primary loading-spinner">
+            </span>
+            <span class="loading loading-lg text-primary loading-spinner">
+            </span>
+            <span class="loading text-secondary loading-bars">
+            </span>
+            <span class="loading text-accent loading-ball">
+            </span>
+            <span class="loading loading-ring">
+            </span>
+            <span class="loading text-info loading-dots">
+            </span>
+          </div>
+          <progress class="progress progress-primary">
+          </progress>
+          <progress class="progress progress-secondary" max="50" value="10">
+          </progress>
+          <div class="flex flex-row gap-4">
+            <div aria-valuenow="75" class="radial-progress text-accent" role="progressbar" style="--value:75">
+              75%
+            </div>
+            <div aria-valuenow="50" class="radial-progress text-secondary" role="progressbar" style="--value:50">
+              50%
+            </div>
+            <div aria-valuenow="25" class="radial-progress text-primary" role="progressbar" style="--value:25">
+              25%
+            </div>
+          </div>
+          <div class="divider divider-primary divider-end">
+            Misc
+          </div>
+          <div class="flex flex-row gap-4">
+            <div class="w-36 h-36 skeleton">
+            </div>
+            <div class="w-36 h-36 skeleton skeleton-text">
+              <span>
+                Eu sou um conte&uacute;do carregando...
+              </span>
+            </div>
+          </div>
+          <div class="divider divider-accent divider-start">
+            Avisos
+          </div>
+          <div class="alert alert-info" role="alert">
+            <span class="material-symbols-outlined text-2xl">
+              info
+            </span>
+            <span>
+              Isso &eacute; um aviso informativo
+            </span>
+            <button class="btn btn-neutral btn-sm btn-ghost" onclick>
+              <span class="material-symbols-outlined text-lg">
+                close
+              </span>
+            </button>
+          </div>
+          <div class="alert alert-error" role="alert">
+            <span class="material-symbols-outlined text-2xl">
+              bomb
+            </span>
+            <span>
+              Isso &eacute; um aviso de erro
+            </span>
+            <button class="btn btn-neutral btn-sm btn-ghost" onclick>
+              <span class="material-symbols-outlined text-lg">
+                close
+              </span>
+            </button>
+          </div>
+          <div class="alert alert-success" role="alert">
+            <span class="material-symbols-outlined text-2xl">
+              check
+            </span>
+            <span>
+              Isso &eacute; um aviso sucesso
+            </span>
+            <button class="btn btn-neutral btn-sm btn-ghost" onclick>
+              <span class="material-symbols-outlined text-lg">
+                close
+              </span>
+            </button>
+          </div>
+          <div class="flex flex-row gap-2 items-center">
+            <div class="status status-success">
+            </div>
+            <span>
+              Tudo ok
+            </span>
+          </div>
+          <div class="flex flex-row gap-2 items-center">
+            <div class="status status-error">
+            </div>
+            <span>
+              Tem algo errado!
+            </span>
+          </div>
+          <div class="flex flex-row gap-2 items-center">
+            <div class="status status-warning">
+            </div>
+            <span>
+              Precisa ficar de olho
+            </span>
+          </div>
+          <div class="grid grid-cols-3 w-full gap-4">
+            <div class="stats shadow">
+              <div class="stat">
+                <div class="stat-title">
+                  Usu&aacute;rios Ativos
+                </div>
+                <div class="stat-value text-primary">
+                  10.481
+                </div>
+                <div class="stat-desc">
+                  Nos &uacute;ltimos 30 dias
+                </div>
+                <div class="stat-figure text-primary">
+                  <span class="material-symbols-outlined text-4xl">
+                    deployed_code_account
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="stats shadow">
+              <div class="stat">
+                <div class="stat-title">
+                  Usu&aacute;rios Novos
+                </div>
+                <div class="stat-value text-success">
+                  5.302
+                </div>
+                <div class="stat-desc">
+                  Nos &uacute;ltimos 30 dias
+                </div>
+                <div class="stat-figure text-success">
+                  <span class="material-symbols-outlined text-4xl">
+                    star
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="stats shadow">
+              <div class="stat">
+                <div class="stat-title">
+                  Erros
+                </div>
+                <div class="stat-value text-error">
+                  231
+                </div>
+                <div class="stat-desc">
+                  Nos &uacute;ltimos 30 dias
+                </div>
+                <div class="stat-figure text-error">
+                  <span class="material-symbols-outlined text-4xl">
+                    error
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="overflow-x-auto rounded-box card-border shadow-sm">
+            <table class="table table-zebra">
+              <thead>
+                <th>
+                  #
+                </th>
+                <th>
+                  Nome
+                </th>
+                <th>
+                  Saldo
+                </th>
+                <th>
+                </th>
+              </thead>
+              <tbody>
+                <tr class="hover:bg-base-300 transition-all ease-in-out">
+                  <td>
+                    1
+                  </td>
+                  <td>
+                    Z&eacute; da Silva
+                  </td>
+                  <td>
+                    <p class="font-bold text-success">
+                      <span>
+                        31.90
+                      </span>
+                    </p>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-ghost tooltip" data-tip="Editar">
+                      <span class="material-symbols-outlined text-lg">
+                        edit
+                      </span>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-base-300 transition-all ease-in-out">
+                  <td>
+                    2
+                  </td>
+                  <td>
+                    Jo&atilde;o Pereira
+                  </td>
+                  <td>
+                    <p class="font-bold text-success">
+                      <span>
+                        123.44
+                      </span>
+                    </p>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-ghost tooltip" data-tip="Editar">
+                      <span class="material-symbols-outlined text-lg">
+                        edit
+                      </span>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-base-300 transition-all ease-in-out">
+                  <td>
+                    3
+                  </td>
+                  <td>
+                    M&aacute;rcia Fagundes
+                  </td>
+                  <td>
+                    <p class="font-bold text-error">
+                      <span>
+                        -51.12
+                      </span>
+                    </p>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-ghost tooltip" data-tip="Editar">
+                      <span class="material-symbols-outlined text-lg">
+                        edit
+                      </span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div>
+        <div class="divider divider-horizontal">
+          Foo
         </div>
-        <div>
+        <div class="max-w-1/2 flex flex-col gap-4">
+          <div class="collapse collapse-arrow" tabindex="0">
+            <div class="collapse-title font-semibold">
+              Clique aqui para expandir!
+            </div>
+            <div class="collapse-content text-sm">
+              <p class>
+                <span>
+                  Aqui vai um texto
+                </span>
+              </p>
+            </div>
+          </div>
+          <div class="card card-border bg-base-100 w-96 shadow-sm image-full">
+            <figure>
+              <img alt="Shoes" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
+            </figure>
+            <div class="card-body">
+              <h5 class="font-bold text-xl text-primary-content">
+                <span>
+                  Eu sou um card!
+                </span>
+              </h5>
+              <p class>
+                <span>
+                  Aqui tem um texto
+                </span>
+              </p>
+              <div class="avatar w-12 h-12">
+                <div class="w-24 rounded-full">
+                  <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
+                </div>
+              </div>
+            </div>
+          </div>
+          <label class="swap text-4xl">
+            <input type="checkbox">
+            <div class="swap-on">
+              Clique Aqui! 😠
+            </div>
+            <div class="swap-off">
+              Clique Aqui 😁
+            </div>
+          </label>
+          <span class="countdown" id="d1a442b431a65879b537e21f0d646041">
+            <span aria-label="10" aria-live="polite" style="--value:10;">
+              10
+            </span>
+            h
+            <span aria-label="59" aria-live="polite" style="--value:59;">
+              59
+            </span>
+            m
+            <span aria-label="59" aria-live="polite" style="--value:59;">
+              59
+            </span>
+            s
+          </span>
+          <div class>
+            <p class>
+              <span>
+                Pressione
+              </span>
+              <kbd class="kbd">
+                <span>
+                  ALT
+                </span>
+              </kbd>
+              <span>
+                +
+              </span>
+              <kbd class="kbd">
+                <span>
+                  R
+                </span>
+              </kbd>
+              <span>
+                para fazer algo
+              </span>
+            </p>
+          </div>
+          <button class="btn btn-primary w-full btn-soft" onclick="modal_01.showModal()">
+            <span class="material-symbols-outlined text-lg">
+              credit_card
+            </span>
+            <span>
+              Meu Cart&atilde;o MT
+            </span>
+          </button>
+          <div class="hover-3d mx-auto">
+            <!-- content -->
+            <figure class="max-w-100 rounded-2xl">
+              <img alt="3D card" src="https://img.daisyui.com/images/stock/creditcard.webp">
+            </figure>
+            <!-- 8 empty divs needed for the 3D effect -->
+            <div>
+            </div>
+            <div>
+            </div>
+            <div>
+            </div>
+            <div>
+            </div>
+            <div>
+            </div>
+            <div>
+            </div>
+            <div>
+            </div>
+            <div>
+            </div>
+          </div>
+          <div class="carousel w-full">
+            <div class="carousel-item relative w-full" id="slide0">
+              <img class="w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
+              <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                <a class="btn btn-circle" href="#slide-1">
+                  ❮
+                </a>
+                <a class="btn btn-circle" href="#slide1">
+                  ❯
+                </a>
+              </div>
+            </div>
+            <div class="carousel-item relative w-full" id="slide1">
+              <img class="w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
+              <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                <a class="btn btn-circle" href="#slide0">
+                  ❮
+                </a>
+                <a class="btn btn-circle" href="#slide2">
+                  ❯
+                </a>
+              </div>
+            </div>
+            <div class="carousel-item relative w-full" id="slide2">
+              <img class="w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
+              <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                <a class="btn btn-circle" href="#slide1">
+                  ❮
+                </a>
+                <a class="btn btn-circle" href="#slide3">
+                  ❯
+                </a>
+              </div>
+            </div>
+            <div class="carousel-item relative w-full" id="slide3">
+              <img class="w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
+              <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                <a class="btn btn-circle" href="#slide2">
+                  ❮
+                </a>
+                <a class="btn btn-circle" href="#slide4">
+                  ❯
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-        </div>
-        <div>
-        </div>
-        <div>
-        </div>
-        <div>
-        </div>
-       </div>
-       <h5 class="font-bold text-xl text-primary">
-        <span>
-         Este &eacute; o seu Cart&atilde;o!
-        </span>
-       </h5>
-       <p class>
-        <span>
-         Muito legal n&eacute;?
-        </span>
-       </p>
-       <ul class="list rounded-box shadow-md">
-        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">
-         &Uacute;ltimas Transa&ccedil;&otilde;es
+      </div>
+    </div>
+    <div class="drawer-side">
+      <label aria-label="close sidebar" class="drawer-overlay" for="my-drawer-2">
+      </label>
+      <ul class="menu bg-base-200 min-h-full w-80 p-4">
+        <li class="display-flex flex-row items-center gap-2">
+          <a href="https://google.com.br">
+            <span class="material-symbols-outlined">
+              globe
+            </span>
+            Google
+          </a>
         </li>
-        <div class="flex flex-row items-center justify-between list-row">
-         <span>
-          15/12/2025
-         </span>
-         <div class="flex flex-row items-center gap-2 text-success font-bold">
-          <span>
-           R$ 20.00
-          </span>
-          <span class="material-symbols-outlined">
-           more_up
-          </span>
-         </div>
-        </div>
-        <div class="flex flex-row items-center justify-between list-row">
-         <span>
-          14/12/2025
-         </span>
-         <div class="flex flex-row items-center gap-2 text-error font-bold">
-          <span>
-           - R$ 34.00
-          </span>
-          <span class="material-symbols-outlined">
-           more_down
-          </span>
-         </div>
-        </div>
-        <div class="flex flex-row items-center justify-between list-row">
-         <span>
-          13/12/2025
-         </span>
-         <div class="flex flex-row items-center gap-2 text-success font-bold">
-          <span>
-           R$ 21.00
-          </span>
-          <span class="material-symbols-outlined">
-           more_up
-          </span>
-         </div>
-        </div>
-        <div class="flex flex-row items-center justify-between list-row">
-         <span>
-          12/12/2025
-         </span>
-         <div class="flex flex-row items-center gap-2 text-error font-bold">
-          <span>
-           - R$ 11.00
-          </span>
-          <span class="material-symbols-outlined">
-           more_down
-          </span>
-         </div>
-        </div>
-        <div class="flex flex-row items-center justify-between list-row">
-         <span>
-          11/12/2025
-         </span>
-         <div class="flex flex-row items-center gap-2 text-success font-bold">
-          <span>
-           R$ 5.00
-          </span>
-          <span class="material-symbols-outlined">
-           more_up
-          </span>
-         </div>
-        </div>
-        <div class="flex flex-row items-center justify-between list-row">
-         <span>
-          10/12/2025
-         </span>
-         <div class="flex flex-row items-center gap-2 text-success font-bold">
-          <span>
-           R$ 8.90
-          </span>
-          <span class="material-symbols-outlined">
-           more_up
-          </span>
-         </div>
-        </div>
-       </ul>
-       <button class="btn btn-primary btn-soft">
-        <span>
-         Hist&oacute;rico de Completo
-        </span>
-       </button>
-       <button class="btn btn-primary btn-dash">
-        <span>
-         Bloquear Cart&atilde;o
-        </span>
-       </button>
-      </div>
-     </div>
-     <form class="modal-backdrop" method="dialog">
-      <button>
-       close
-      </button>
-     </form>
-    </dialog>
-    <div class="toast z-99 toast-end">
-     <div class="alert alert-primary">
-      <span>
-       Isso &eacute; uma mensagem
-      </span>
-     </div>
-     <div class="alert alert-error">
-      <span>
-       Isso &eacute; um erro
-      </span>
-     </div>
+        <li class="display-flex flex-row items-center gap-2">
+          <a href="https://google.com.br">
+            <span class="material-symbols-outlined">
+              globe
+            </span>
+            Google
+          </a>
+        </li>
+        <li class="display-flex flex-row items-center gap-2">
+          <a href="https://google.com.br">
+            <span class="material-symbols-outlined">
+              globe
+            </span>
+            Google
+          </a>
+        </li>
+      </ul>
     </div>
-    <div class="flex flex-col gap-4">
-     <label class="swap swap-rotate">
-      <input class="theme-controller" type="checkbox" value="dark">
-      <svg class="swap-off h-10 w-10 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-       <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z">
-       </path>
-      </svg>
-      <svg class="swap-on h-10 w-10 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-       <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z">
-       </path>
-      </svg>
-     </label>
-     <span class="text-rotate text-7xl leading-[2]">
-      <span class="justify-items-center">
-       <span>
-        10% CASHBACK
-       </span>
-       <span>
-        CASHBACK ESPECIAL
-       </span>
-      </span>
-     </span>
-     <div class="flex flex-row gap-4">
-      <span class="loading loading-sm text-primary loading-spinner">
-      </span>
-      <span class="loading loading-md text-primary loading-spinner">
-      </span>
-      <span class="loading loading-lg text-primary loading-spinner">
-      </span>
-      <span class="loading text-secondary loading-bars">
-      </span>
-      <span class="loading text-accent loading-ball">
-      </span>
-      <span class="loading loading-ring">
-      </span>
-      <span class="loading text-info loading-dots">
-      </span>
-     </div>
-     <progress class="progress progress-primary">
-     </progress>
-     <progress class="progress progress-secondary" max="50" value="10">
-     </progress>
-     <div class="flex flex-row gap-4">
-      <div aria-valuenow="75" class="radial-progress text-accent" role="progressbar" style="--value:75">
-       75%
-      </div>
-      <div aria-valuenow="50" class="radial-progress text-secondary" role="progressbar" style="--value:50">
-       50%
-      </div>
-      <div aria-valuenow="25" class="radial-progress text-primary" role="progressbar" style="--value:25">
-       25%
-      </div>
-     </div>
-     <div class="divider divider-primary divider-end">
-      Misc
-     </div>
-     <div class="flex flex-row gap-4">
-      <div class="w-36 h-36 skeleton">
-      </div>
-      <div class="w-36 h-36 skeleton skeleton-text">
-       <span>
-        Eu sou um conte&uacute;do carregando...
-       </span>
-      </div>
-     </div>
-     <div class="divider divider-accent divider-start">
-      Avisos
-     </div>
-     <div class="alert alert-info" role="alert">
-      <span class="material-symbols-outlined text-2xl">
-       info
-      </span>
-      <span>
-       Isso &eacute; um aviso informativo
-      </span>
-      <button class="btn btn-neutral btn-sm btn-ghost" onclick>
-       <span class="material-symbols-outlined text-lg">
-        close
-       </span>
-      </button>
-     </div>
-     <div class="alert alert-error" role="alert">
-      <span class="material-symbols-outlined text-2xl">
-       bomb
-      </span>
-      <span>
-       Isso &eacute; um aviso de erro
-      </span>
-      <button class="btn btn-neutral btn-sm btn-ghost" onclick>
-       <span class="material-symbols-outlined text-lg">
-        close
-       </span>
-      </button>
-     </div>
-     <div class="alert alert-success" role="alert">
-      <span class="material-symbols-outlined text-2xl">
-       check
-      </span>
-      <span>
-       Isso &eacute; um aviso sucesso
-      </span>
-      <button class="btn btn-neutral btn-sm btn-ghost" onclick>
-       <span class="material-symbols-outlined text-lg">
-        close
-       </span>
-      </button>
-     </div>
-     <div class="flex flex-row gap-2 items-center">
-      <div class="status status-success">
-      </div>
-      <span>
-       Tudo ok
-      </span>
-     </div>
-     <div class="flex flex-row gap-2 items-center">
-      <div class="status status-error">
-      </div>
-      <span>
-       Tem algo errado!
-      </span>
-     </div>
-     <div class="flex flex-row gap-2 items-center">
-      <div class="status status-warning">
-      </div>
-      <span>
-       Precisa ficar de olho
-      </span>
-     </div>
-     <div class="grid grid-cols-3 w-full gap-4">
-      <div class="stats shadow">
-       <div class="stat">
-        <div class="stat-title">
-         Usu&aacute;rios Ativos
-        </div>
-        <div class="stat-value text-primary">
-         10.481
-        </div>
-        <div class="stat-desc">
-         Nos &uacute;ltimos 30 dias
-        </div>
-        <div class="stat-figure text-primary">
-         <span class="material-symbols-outlined text-4xl">
-          deployed_code_account
-         </span>
-        </div>
-       </div>
-      </div>
-      <div class="stats shadow">
-       <div class="stat">
-        <div class="stat-title">
-         Usu&aacute;rios Novos
-        </div>
-        <div class="stat-value text-success">
-         5.302
-        </div>
-        <div class="stat-desc">
-         Nos &uacute;ltimos 30 dias
-        </div>
-        <div class="stat-figure text-success">
-         <span class="material-symbols-outlined text-4xl">
-          star
-         </span>
-        </div>
-       </div>
-      </div>
-      <div class="stats shadow">
-       <div class="stat">
-        <div class="stat-title">
-         Erros
-        </div>
-        <div class="stat-value text-error">
-         231
-        </div>
-        <div class="stat-desc">
-         Nos &uacute;ltimos 30 dias
-        </div>
-        <div class="stat-figure text-error">
-         <span class="material-symbols-outlined text-4xl">
-          error
-         </span>
-        </div>
-       </div>
-      </div>
-     </div>
-     <div class="overflow-x-auto rounded-box card-border shadow-sm">
-      <table class="table table-zebra">
-       <thead>
-        <th>
-         #
-        </th>
-        <th>
-         Nome
-        </th>
-        <th>
-         Saldo
-        </th>
-        <th>
-        </th>
-       </thead>
-       <tbody>
-        <tr class="hover:bg-base-300 transition-all ease-in-out">
-         <td>
-          1
-         </td>
-         <td>
-          Z&eacute; da Silva
-         </td>
-         <td>
-          <p class="font-bold text-success">
-           <span>
-            31.90
-           </span>
-          </p>
-         </td>
-         <td>
-          <button class="btn btn-sm btn-ghost tooltip" data-tip="Editar">
-           <span class="material-symbols-outlined text-lg">
-            edit
-           </span>
-          </button>
-         </td>
-        </tr>
-        <tr class="hover:bg-base-300 transition-all ease-in-out">
-         <td>
-          2
-         </td>
-         <td>
-          Jo&atilde;o Pereira
-         </td>
-         <td>
-          <p class="font-bold text-success">
-           <span>
-            123.44
-           </span>
-          </p>
-         </td>
-         <td>
-          <button class="btn btn-sm btn-ghost tooltip" data-tip="Editar">
-           <span class="material-symbols-outlined text-lg">
-            edit
-           </span>
-          </button>
-         </td>
-        </tr>
-        <tr class="hover:bg-base-300 transition-all ease-in-out">
-         <td>
-          3
-         </td>
-         <td>
-          M&aacute;rcia Fagundes
-         </td>
-         <td>
-          <p class="font-bold text-error">
-           <span>
-            -51.12
-           </span>
-          </p>
-         </td>
-         <td>
-          <button class="btn btn-sm btn-ghost tooltip" data-tip="Editar">
-           <span class="material-symbols-outlined text-lg">
-            edit
-           </span>
-          </button>
-         </td>
-        </tr>
-       </tbody>
-      </table>
-     </div>
-    </div>
-    <div class="divider divider-horizontal">
-     Foo
-    </div>
-    <div class="max-w-1/2 flex flex-col gap-4">
-     <div class="collapse collapse-arrow" tabindex="0">
-      <div class="collapse-title font-semibold">
-       Clique aqui para expandir!
-      </div>
-      <div class="collapse-content text-sm">
-       <p class>
-        <span>
-         Aqui vai um texto
-        </span>
-       </p>
-      </div>
-     </div>
-     <div class="card card-border bg-base-100 w-96 shadow-sm image-full">
-      <figure>
-       <img alt="Shoes" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
-      </figure>
-      <div class="card-body">
-       <h5 class="font-bold text-xl text-primary-content">
-        <span>
-         Eu sou um card!
-        </span>
-       </h5>
-       <p class>
-        <span>
-         Aqui tem um texto
-        </span>
-       </p>
-       <div class="avatar w-12 h-12">
-        <div class="w-24 rounded-full">
-         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
-        </div>
-       </div>
-      </div>
-     </div>
-     <label class="swap text-4xl">
-      <input type="checkbox">
-      <div class="swap-on">
-       Clique Aqui! 😠
-      </div>
-      <div class="swap-off">
-       Clique Aqui 😁
-      </div>
-     </label>
-     <span class="countdown" id="ce6aeb9896cb5f7fba6c02747e4e414d">
-      <span aria-label="10" aria-live="polite" style="--value:10;">
-       10
-      </span>
-      h
-      <span aria-label="59" aria-live="polite" style="--value:59;">
-       59
-      </span>
-      m
-      <span aria-label="59" aria-live="polite" style="--value:59;">
-       59
-      </span>
-      s
-     </span>
-     <div class>
-      <p class>
-       <span>
-        Pressione
-       </span>
-       <kbd class="kbd">
-        <span>
-         ALT
-        </span>
-       </kbd>
-       <span>
-        +
-       </span>
-       <kbd class="kbd">
-        <span>
-         R
-        </span>
-       </kbd>
-       <span>
-        para fazer algo
-       </span>
-      </p>
-     </div>
-     <button class="btn btn-primary w-full btn-soft" onclick="modal_01.showModal()">
-      <span class="material-symbols-outlined text-lg">
-       credit_card
-      </span>
-      <span>
-       Meu Cart&atilde;o MT
-      </span>
-     </button>
-     <div class="hover-3d mx-auto">
-      <!-- content -->
-      <figure class="max-w-100 rounded-2xl">
-       <img alt="3D card" src="https://img.daisyui.com/images/stock/creditcard.webp">
-      </figure>
-      <!-- 8 empty divs needed for the 3D effect -->
-      <div>
-      </div>
-      <div>
-      </div>
-      <div>
-      </div>
-      <div>
-      </div>
-      <div>
-      </div>
-      <div>
-      </div>
-      <div>
-      </div>
-      <div>
-      </div>
-     </div>
-     <div class="carousel w-full">
-      <div class="carousel-item relative w-full" id="slide0">
-       <img class="w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
-       <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-        <a class="btn btn-circle" href="#slide-1">
-         ❮
-        </a>
-        <a class="btn btn-circle" href="#slide1">
-         ❯
-        </a>
-       </div>
-      </div>
-      <div class="carousel-item relative w-full" id="slide1">
-       <img class="w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
-       <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-        <a class="btn btn-circle" href="#slide0">
-         ❮
-        </a>
-        <a class="btn btn-circle" href="#slide2">
-         ❯
-        </a>
-       </div>
-      </div>
-      <div class="carousel-item relative w-full" id="slide2">
-       <img class="w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
-       <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-        <a class="btn btn-circle" href="#slide1">
-         ❮
-        </a>
-        <a class="btn btn-circle" href="#slide3">
-         ❯
-        </a>
-       </div>
-      </div>
-      <div class="carousel-item relative w-full" id="slide3">
-       <img class="w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp">
-       <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-        <a class="btn btn-circle" href="#slide2">
-         ❮
-        </a>
-        <a class="btn btn-circle" href="#slide4">
-         ❯
-        </a>
-       </div>
-      </div>
-     </div>
-    </div>
-   </div>
   </div>
-  <div class="drawer-side">
-   <label aria-label="close sidebar" class="drawer-overlay" for="my-drawer-2">
-   </label>
-   <ul class="menu bg-base-200 min-h-full w-80 p-4">
-    <li class="display-flex flex-row items-center gap-2">
-     <a href="https://google.com.br">
-      <span class="material-symbols-outlined">
-       globe
-      </span>
-      Google
-     </a>
-    </li>
-    <li class="display-flex flex-row items-center gap-2">
-     <a href="https://google.com.br">
-      <span class="material-symbols-outlined">
-       globe
-      </span>
-      Google
-     </a>
-    </li>
-    <li class="display-flex flex-row items-center gap-2">
-     <a href="https://google.com.br">
-      <span class="material-symbols-outlined">
-       globe
-      </span>
-      Google
-     </a>
-    </li>
-   </ul>
-  </div>
- </div>
+</body>
+
 </html>
