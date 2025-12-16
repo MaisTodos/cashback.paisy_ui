@@ -1,4 +1,4 @@
-from .base import BaseComponent, BaseComponents
-from .components import DaisyUI
+from . import components
+from .core import PUIComponentABC
 
-__all__ = ["BaseComponent", "BaseComponents", "DaisyUI"]
+__all__ = ["PUIComponentABC", "components"]

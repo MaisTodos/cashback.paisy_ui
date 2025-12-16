@@ -51,24 +51,24 @@ Every component’s constructor accepts:
 All components inherit the `__call__` behavior from `BaseComponent`, which allows you to define children like this:
 
 ```python
-from paisy_ui import BaseComponents
+from paisy_ui.components import PUIDiv, PUIText, PUIButton
 
-foo = BaseComponents.Div(style="padding:8px; background:red;")(
-    BaseComponents.Div(style="padding:8px; background:green;")(
-        BaseComponents.Div(style="padding:8px; background:blue;")(
-            BaseComponents.Div(style="padding:8px; background:yellow;")(
-                BaseComponents.Div(style="padding:8px; background:pink;")(
-                    BaseComponents.P()("Hello World"),
-                    BaseComponents.P()("This is another text"),
-                    BaseComponents.Button(onclick="alert('ok')")("Ok"),
-                )
-            )
-        )
-    )
-)
+foo = PUIDiv(style="padding:8px; background:red;")[
+    PUIDiv(style="padding:8px; background:green;")[
+        PUIDiv(style="padding:8px; background:blue;")[
+            PUIDiv(style="padding:8px; background:yellow;")[
+                PUIDiv(style="padding:8px; background:pink;")[
+                    "Hello World",
+                    PUIText()["This is another text"],
+                    PUIButton(onclick="alert('ok')")["Ok"],
+                ]
+            ]
+        ]
+    ]
+]
 
 print(foo)
-'''
+"""
 <div style="padding: 8px; background: red">
     <div style="padding: 8px; background: green">
         <div style="padding: 8px; background: blue">
@@ -82,68 +82,56 @@ print(foo)
         </div>
     </div>
 </div>
-'''
+"""
 ```
 
 ---
 
----
 
-## Examples
+### 📦 PUIBaseComponentABC Example
 
-### 🛫 Pre-built examples
-
-1. FastAPI:
-```bash
-poetry run python examples/with_fastapi.py
-```
-
----
-
-### 📦 BaseComponents Example
-
-You can use `BaseComponents` to create custom HTML structures or extend them to define components with custom behavior:
+You can use `PUIBaseComponentABC` to create custom HTML structures or extend them to define components with custom behavior:
 
 ```python
-from paisy_ui import BaseComponents, BaseComponent
+from paisy_ui import PUIComponentABC
 
-class CustomComponent(BaseComponent):
-    tag_name = 'span'
+from paisy_ui.components import PUIHTML
 
-    def _build(self):
-        self.css("text-primary")
+class CustomComponent(PUIComponentABC):
+    """<span>[[content]]</span>"""
 
-page = BaseComponents.HTML()(
-    BaseComponents.Head()(
-        BaseComponents.Link(
-            href="./style.css",
-            rel="stylesheet",
-            type="text/css"
-        )
-    ),
-    BaseComponents.Body()(
-        BaseComponents.P()("Hello world"),
-        CustomComponent()("Hello!")
-    ),
-)
+    def __init__(self, *classes, **attributes):
+        super().__init__(*classes, **attributes)
+        self.css('text-primary')
+
+
+page = PUIHTML()[
+    "Hello World!",
+    CustomComponent()["Hello!"]
+]
 
 print(page)
-'''
+
+"""
 <html>
     <head>
-        <link href="./style.css" rel="stylesheet" type="text/css">
+        ...
     </head>
     <body>
-        <p>Hello world</p>
+        ...
+        <span>Hello World!</span>
         <span class="text-primary">Hello!</span>
+        ...
     </body>
 </html>
-'''
+"""
 ```
 
 ---
 
 ### 🌻 DaisyUI Example
+
+> This section is still being updated, checkout the `examples/showcase.py`
 
 `DaisyUI` components provide convenient abstractions for complex structures:
 
