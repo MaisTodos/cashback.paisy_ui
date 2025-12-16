@@ -1,5 +1,6 @@
 from paisy_ui.components import (
     PUIHTML,
+    PUIAlert,
     PUIAvatar,
     PUIButton,
     PUICard,
@@ -12,12 +13,15 @@ from paisy_ui.components import (
     PUIImgCarousel,
     PUIKbd,
     PUIList,
+    PUILoading,
     PUIModal,
     PUIStat,
     PUIStatus,
     PUISwap,
     PUISymbol,
+    PUITable,
     PUIText,
+    PUITextRotate,
     PUIThemeController,
     PUITitle,
 )
@@ -83,6 +87,23 @@ page = PUIHTML()[
         modal,
         PUIDiv().display_flex_col.gap_md[
             PUIThemeController(value="dark"),
+            PUITextRotate()["10% CASHBACK", "CASHBACK ESPECIAL"],
+            PUIDiv().display_flex_row.gap_sm[
+                PUILoading().sm.primary.spinner,
+                PUILoading().md.secondary.bars,
+                PUILoading().lg.error.ball,
+                PUILoading().md.info.ring,
+                PUILoading().dots,
+            ],
+            PUIAlert(
+                symbol="info", message="Isso é um aviso informativo", close_button=True
+            ).info,
+            PUIAlert(
+                symbol="bomb", message="Isso é um aviso de erro", close_button=True
+            ).error,
+            PUIAlert(
+                symbol="check", message="Isso é um aviso sucesso", close_button=True
+            ).success,
             PUIDiv().display_flex_row.gap_sm.items_center[
                 PUIStatus().success, "Tudo ok"
             ],
@@ -158,6 +179,31 @@ page = PUIHTML()[
                 ]
             ),
         ],
+    ],
+    PUIDiv().padding_lg.margin_lg[
+        PUITable(
+            columns=["#", "Nome", "Saldo", ""],
+            rows=[
+                [
+                    "1",
+                    "Zé da Silva",
+                    PUIText().font_bold.text_success["31.90"],
+                    PUIButton().sm.ghost[PUISymbol(symbol="edit").text_lg],
+                ],
+                [
+                    "2",
+                    "João Pereira",
+                    PUIText().font_bold.text_success["123.44"],
+                    PUIButton().sm.ghost[PUISymbol(symbol="edit").text_lg],
+                ],
+                [
+                    "3",
+                    "Márcia Fagundes",
+                    PUIText().font_bold.text_error["-51.12"],
+                    PUIButton().sm.ghost[PUISymbol(symbol="edit").text_lg],
+                ],
+            ],
+        ),
     ],
 ]
 

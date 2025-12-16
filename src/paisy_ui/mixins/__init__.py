@@ -4,7 +4,7 @@ from .display import PUIDisplayMixin
 from .sizing import PUIHeightMixin, PUIWidthMixin
 from .spacing import PUIMarginMixin, PUIPaddingMixin
 from .text_color import PUITextColorMixin
-from .typography import PUITextSizeMixin
+from .typography import PUIFontWeightMixin, PUITextSizeMixin
 from .variant import PUIVariantMixin
 
 
@@ -35,5 +35,6 @@ __all__ = [
     "PUIHeightMixin",
     "PUIWidthMixin",
     "PUITextSizeMixin",
+    "PUIFontWeightMixin",
     "PUIBorderMixin",
 ]

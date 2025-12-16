@@ -1,6 +1,13 @@
 from ..core import PUIStyleMixinABC
 
 
+class PUIFontWeightMixin(PUIStyleMixinABC):
+    @property
+    def font_bold(self):
+        self.css("font-bold")
+        return self
+
+
 class PUITextSizeMixin(PUIStyleMixinABC):
     @property
     def text_sm(self):
@@ -45,4 +52,5 @@ class PUITextSizeMixin(PUIStyleMixinABC):
     @property
     def text_6xl(self):
         self.css("text-6xl")
+        return self
         return self

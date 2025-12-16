@@ -1,5 +1,11 @@
 from ..core import PUIComponentABC
-from ..mixins import PUIBorderMixin, PUIColorsMixins, PUILayoutMixin, PUITextSizeMixin
+from ..mixins import (
+    PUIBorderMixin,
+    PUIColorsMixins,
+    PUIFontWeightMixin,
+    PUILayoutMixin,
+    PUITextSizeMixin,
+)
 
 
 class PUIHTML(PUIComponentABC):
@@ -133,7 +139,12 @@ class PUIDiv(PUIComponentABC, PUIColorsMixins, PUILayoutMixin, PUIBorderMixin):
 
 
 class PUIText(
-    PUIComponentABC, PUIColorsMixins, PUILayoutMixin, PUIBorderMixin, PUITextSizeMixin
+    PUIComponentABC,
+    PUIColorsMixins,
+    PUILayoutMixin,
+    PUIBorderMixin,
+    PUITextSizeMixin,
+    PUIFontWeightMixin,
 ):
     """<p></p>"""
 

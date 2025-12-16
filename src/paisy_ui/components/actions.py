@@ -25,6 +25,11 @@ class PUIButton(PUIComponentABC, PUIVariantMixin, PUILayoutMixin, PUIBorderMixin
         self.css("btn-disabled")
         return self
 
+    @property
+    def sm(self):
+        self.css("btn-sm")
+        return self
+
 
 # TODO: Implement
 # class PUIDropdown(PUIComponentABC):
@@ -109,6 +114,12 @@ class PUIThemeController(PUIComponentABC):
         self.value = value
         super().__init__(*classes, **attributes)
         input = self.tag.find(attrs={"class": "theme-controller"})
+        if not input:
+            raise Exception("Failed to build")
+        input.attrs.update(value=value)
+        if not input:
+            raise Exception("Failed to build")
+        input.attrs.update(value=value)
         if not input:
             raise Exception("Failed to build")
         input.attrs.update(value=value)

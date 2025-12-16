@@ -160,7 +160,7 @@ class PUICountdown(PUIComponentABC):
                 self.tag.append(value.sufix)
 
 
-# TODO: Implementar
+# TODO: Implement
 # class PUIDiff(PUIComponentABC):
 #     pass
 
@@ -212,7 +212,7 @@ class PUIHover3dCardImg(PUIComponentABC):
         img.attrs.update(src=img_src)
 
 
-# TODO: Implementar
+# TODO: Implement
 # class PUIHoverGallery(PUIComponentABC):
 #     pass
 
@@ -308,3 +308,58 @@ class PUIStatus(PUIComponentABC, PUIVariantMixin):
     """<div class="status"></div>"""
 
     _variant_prefix = "status"
+
+
+class PUITable(PUIComponentABC):
+    """<div class="overflow-x-auto rounded-box card-border shadow-sm"><table class="table table-zebra">[[content]]</tabe></div>"""
+
+    def __build_thead(self, columns: List[Union[str, PUIComponentABC]]) -> Tag:
+        thead, _ = parse_html("<thead></thead>")
+        for col in columns:
+            _col, _ = parse_html("<th></th>")
+            if isinstance(col, PUIComponentABC):
+                _col.append(col.tag)
+            else:
+                _col.append(col)
+            thead.append(_col)
+        return thead
+
+    def __build_tbody(self, rows: List[List[Union[str, PUIComponentABC]]]) -> Tag:
+        tbody, _ = parse_html("<tbody></tbody>")
+        for columns in rows:
+            row, _ = parse_html(
+                '<tr class="hover:bg-base-300 transition-all ease-in-out"></tr>'
+            )
+            for col in columns:
+                _col, _ = parse_html("<td></td>")
+                if isinstance(col, PUIComponentABC):
+                    _col.append(col.tag)
+                else:
+                    _col.append(col)
+                row.append(_col)
+            tbody.append(row)
+        return tbody
+
+    def __init__(
+        self,
+        *classes,
+        columns: List[Union[str, PUIComponentABC]],
+        rows: List[List[Union[str, PUIComponentABC]]],
+        **attributes,
+    ):
+        super().__init__(*classes, **attributes)
+        thead = self.__build_thead(columns=columns)
+        tbody = self.__build_tbody(rows=rows)
+        if not self.wrapper:
+            raise Exception("Build Error")
+        self.wrapper.append(thead)
+        self.wrapper.append(tbody)
+
+
+class PUITextRotate(PUIComponentABC):
+    """<span class="text-rotate text-7xl leading-[2]"><span class="justify-items-center">[[content]]</span></span>"""
+
+
+# TODO: Implement
+# class PUITimeline(PUIComponentABC):
+#     """foo"""

@@ -13,7 +13,10 @@ from .data_display import (
     PUIList,
     PUIStat,
     PUIStatus,
+    PUITable,
+    PUITextRotate,
 )
+from .feedback import PUIAlert, PUILoading
 
 __all__ = [
     "PUIHTML",
@@ -38,4 +41,8 @@ __all__ = [
     "PUIList",
     "PUIStat",
     "PUIStatus",
+    "PUITable",
+    "PUITextRotate",
+    "PUIAlert",
+    "PUILoading",
 ]
