@@ -60,6 +60,21 @@ class PUIComponentABC(ABC):
         add_css(self.tag, *classes)
         return self
 
+    @property
+    def skeleton(self):
+        self.css("skeleton")
+        return self
+
+    @property
+    def skeleton_text(self):
+        self.css("skeleton", "skeleton-text")
+        return self
+
+    def tooltip(self, content: str):
+        add_css(self.tag, "tooltip")
+        self.tag.attrs.update(**{"data-tip": content})
+        return self
+
 
 class PUIStyleMixinABC(ABC):
     @abstractmethod

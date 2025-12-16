@@ -134,7 +134,9 @@ class PUIHTML(PUIComponentABC):
     """
 
 
-class PUIDiv(PUIComponentABC, PUIColorsMixins, PUILayoutMixin, PUIBorderMixin):
+class PUIDiv(
+    PUIComponentABC, PUIColorsMixins, PUILayoutMixin, PUIBorderMixin, PUIFontWeightMixin
+):
     """<div></div>"""
 
 
