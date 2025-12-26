@@ -1,8 +1,9 @@
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from ..core import PUIComponentABC
-from ..mixins import PUIBorderMixin, PUILayoutMixin, PUIVariantMixin
+from ..exceptions import PUIBuildError
+from ..mixins import PUIVariantMixin
 from ..utils import parse_html
 from .base import PUISymbol
 
@@ -83,7 +84,7 @@ class PUISidebarLayout(PUIComponentABC):
         super().__init__(*classes, **attributes)
         _title = self.tag.find("div", {"id": "navbar-title"})
         if not _title:
-            raise Exception("Build Error")
+            raise PUIBuildError
         _title.append(title)
 
         uls = self.tag.find_all("ul")
