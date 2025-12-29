@@ -135,7 +135,7 @@ class PUIHTML(PUIComponentABC):
 
     def __init__(self, *classes, **attributes):
         super().__init__(*classes, **attributes)
-        self.wrapper = self.tag.find("body")
+        self._wrapper = self.find("body")
 
 
 class PUIDiv(

@@ -1,7 +1,6 @@
 from typing import Union
 
 from ..core import PUIComponentABC, Tag
-from ..exceptions import PUIBuildError
 from ..mixins import PUIBorderMixin, PUILayoutMixin, PUITextSizeMixin, PUIVariantMixin
 from ..utils import parse_html
 
@@ -61,8 +60,6 @@ class PUIModal(PUIComponentABC):
 
     @property
     def with_close_button(self):
-        if not self.wrapper:
-            raise PUIBuildError
         close_form, _ = parse_html(
             """<form method="dialog">
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -90,10 +87,8 @@ class PUISwap(PUIComponentABC, PUITextSizeMixin):
         self.on = Tag
         self.off = Tag
         super().__init__(*classes, **attributes)
-        div_on = self.tag.find(attrs={"class": "swap-on"})
-        div_off = self.tag.find(attrs={"class": "swap-off"})
-        if not div_on or not div_off:
-            raise Exception("Failed to build")
+        div_on = self.find(attrs={"class": "swap-on"})
+        div_off = self.find(attrs={"class": "swap-off"})
         div_on.append(on if isinstance(on, str) else on.tag)
         div_off.append(off if isinstance(off, str) else off.tag)
 
@@ -114,16 +109,5 @@ class PUIThemeController(PUIComponentABC):
     def __init__(self, *classes, value: str, **attributes):
         self.value = value
         super().__init__(*classes, **attributes)
-        input = self.tag.find(attrs={"class": "theme-controller"})
-        if not input:
-            raise Exception("Failed to build")
-        input.attrs.update(value=value)
-        if not input:
-            raise Exception("Failed to build")
-        input.attrs.update(value=value)
-        if not input:
-            raise Exception("Failed to build")
-        input.attrs.update(value=value)
-        if not input:
-            raise Exception("Failed to build")
+        input = self.find(attrs={"class": "theme-controller"})
         input.attrs.update(value=value)

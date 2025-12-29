@@ -4,3 +4,7 @@ class PUIException(Exception):
 
 class PUIBuildError(PUIException):
     pass
+
+
+class PUIFindError(PUIException):
+    pass

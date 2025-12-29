@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Union
 
 from ..core import PUIComponentABC, Tag
-from ..exceptions import PUIBuildError
+from ..exceptions import PUIFindError
 from ..mixins import PUIBorderMixin, PUILayoutMixin, PUIVariantMixin
 from ..utils import add_css, generate_unique_id, parse_html
 from .base import PUISymbol
@@ -24,36 +24,26 @@ class PUIAvatar(PUIComponentABC, PUIBorderMixin):
 
     def __init__(self, *classes, src: str, **attributes):
         super().__init__(*classes, **attributes)
-        img = self.tag.find("img")
-        if not img:
-            raise PUIBuildError
+        img = self.find("img")
         img.attrs.update(src=src)
 
     @property
     def sm(self):
-        if not self.wrapper:
-            raise PUIBuildError
         add_css(self.wrapper, "w-8", "h-8")
         return self
 
     @property
     def md(self):
-        if not self.wrapper:
-            raise PUIBuildError
         add_css(self.wrapper, "w-12", "h-12")
         return self
 
     @property
     def lg(self):
-        if not self.wrapper:
-            raise PUIBuildError
         add_css(self.wrapper, "w-24", "h-24")
         return self
 
     @property
     def xl(self):
-        if not self.wrapper:
-            raise PUIBuildError
         add_css(self.wrapper, "w-48", "h-48")
         return self
 
@@ -93,8 +83,6 @@ class PUICard(PUIComponentABC, PUIBorderMixin, PUILayoutMixin):
         </figure>
         """
         )
-        if not self.wrapper:
-            raise PUIBuildError
         self.wrapper.insert_before(img)
         return self
 
@@ -106,8 +94,6 @@ class PUICarouselABC(PUIComponentABC):
 
     def __init__(self, *classes, items: List[Tag], **attributes):
         super().__init__(*classes, **attributes)
-        if not self.wrapper:
-            raise PUIBuildError
         for index, tag in enumerate(items):
             item = self.build_item(tag=tag, index=index)
             self.wrapper.append(item)
@@ -156,8 +142,6 @@ class PUICollapse(PUIComponentABC, PUIBorderMixin, PUILayoutMixin):
 
     def __init__(self, *classes, title: str, **attributes):
         super().__init__(*classes, **attributes)
-        if not self.wrapper:
-            raise PUIBuildError
         collapse_title, _ = parse_html(
             f'<div class="collapse-title font-semibold">{title}</div>'
         )
@@ -236,9 +220,7 @@ class PUIHover3dCardImg(PUIComponentABC):
 
     def __init__(self, *classes, img_src: str, **attributes):
         super().__init__(*classes, **attributes)
-        img = self.tag.find("img")
-        if not img:
-            raise PUIBuildError
+        img = self.find("img")
         img.attrs.update(src=img_src)
 
 
@@ -283,28 +265,25 @@ class PUIStat(PUIComponentABC, PUIVariantMixin):
 
     @property
     def title(self) -> Tag:
-        _title = self.tag.find(attrs={"class": "stat-title"})
-        if not _title:
-            raise PUIBuildError
+        _title = self.find(attrs={"class": "stat-title"})
         return _title
 
     @property
     def value(self) -> Tag:
-        _value = self.tag.find(attrs={"class": "stat-value"})
-        if not _value:
-            raise PUIBuildError
+        _value = self.find(attrs={"class": "stat-value"})
         return _value
 
     @property
     def desc(self) -> Tag:
-        _desc = self.tag.find(attrs={"class": "stat-desc"})
-        if not _desc:
-            raise PUIBuildError
+        _desc = self.find(attrs={"class": "stat-desc"})
         return _desc
 
     @property
     def figure(self) -> Optional[Tag]:
-        return self.tag.find(attrs={"class": "stat-figure"})
+        try:
+            return self.tag.find(attrs={"class": "stat-figure"})
+        except PUIFindError:
+            return None
 
     def __init__(
         self,
@@ -318,8 +297,6 @@ class PUIStat(PUIComponentABC, PUIVariantMixin):
         super().__init__(*classes, **attributes)
         if symbol:
             _symbol_wrapper, _ = parse_html('<div class="stat-figure"></div>')
-            if not self.wrapper:
-                raise PUIBuildError
             self.wrapper.append(
                 PUISymbol(symbol=symbol).text_4xl.tag.wrap(_symbol_wrapper)
             )
@@ -380,8 +357,6 @@ class PUITable(PUIComponentABC):
         super().__init__(*classes, **attributes)
         thead = self.__build_thead(columns=columns)
         tbody = self.__build_tbody(rows=rows)
-        if not self.wrapper:
-            raise PUIBuildError
         self.wrapper.append(thead)
         self.wrapper.append(tbody)
 

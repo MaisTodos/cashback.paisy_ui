@@ -1,7 +1,6 @@
 from typing import List, Optional
 
 from ..core import PUIComponentABC
-from ..exceptions import PUIBuildError
 from ..mixins import PUIVariantMixin
 from ..utils import add_css, parse_html
 
@@ -15,23 +14,17 @@ class PUIInputABC(PUIComponentABC):
 
     @property
     def legend(self):
-        _legend = self.tag.find("legend")
-        if not _legend:
-            raise PUIBuildError
+        _legend = self.find("legend")
         return _legend
 
     @property
     def input(self):
-        _input = self.tag.find("input")
-        if not _input:
-            raise PUIBuildError
+        _input = self.find("input")
         return _input
 
     @property
     def label(self):
-        _label = self.tag.find("label")
-        if not _label:
-            raise PUIBuildError
+        _label = self.find("label")
         return _label
 
     @property
@@ -137,16 +130,12 @@ class PUIFilter(PUIComponentABC):
 
     @property
     def reset_input(self):
-        _input = self.tag.find("input", {"class": "filter-reset"})
-        if not _input:
-            raise PUIBuildError
+        _input = self.find("input", {"class": "filter-reset"})
         return _input
 
     def __init__(self, *classes, name: str, id: str, options: List[str], **attributes):
         super().__init__(*classes, **attributes)
         self.reset_input.attrs.update(name=name, id=id)
-        if not self.wrapper:
-            raise PUIBuildError()
         for option in options:
             _input, _ = parse_html(
                 f'<input class="btn" type="radio" name="{name}" aria-label="{option}"/>'
@@ -224,9 +213,7 @@ class PUISelect(PUIComponentABC):
 
     @property
     def input(self):
-        _input = self.tag.find("select")
-        if not _input:
-            raise PUIBuildError
+        _input = self.find("select")
         return _input
 
     @property
