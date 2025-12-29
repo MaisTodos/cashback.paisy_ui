@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from typing import List, Literal, Optional, Union
+from typing import List, Literal, Optional
 
-from ..core import PUIComponentABC, Tag
-from ..mixins import PUIBorderMixin, PUILayoutMixin, PUIVariantMixin
-from ..utils import add_css, generate_unique_id, parse_html
+from ..core import PUIComponentABC
+from ..mixins import PUILayoutMixin, PUIVariantMixin
+from ..utils import parse_html
 from .base import PUISymbol
 
 

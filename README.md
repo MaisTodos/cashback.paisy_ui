@@ -2,7 +2,7 @@
 
 **PaisyUI** is a simple, extensible HTML renderer for **DaisyUI**, built entirely in **Python** on top of `BeautifulSoup (bs4)`.
 
-It allows you to build modern, component-based UIs **without templates, Node.js, or frontend build tools** — directly from Python.
+It allows you to build modern, component-based UIs **without templates, Node.js, or frontend build tools** — directly from Python. Write your entire UI in Python code, compose components declaratively, and generate production-ready HTML with zero frontend dependencies.
 
 ![demo](./demo.png)
 
@@ -10,14 +10,16 @@ It allows you to build modern, component-based UIs **without templates, Node.js,
 
 ## ✨ Why PaisyUI?
 
-`paisy_ui` is a lightweight Python package (~42.6 KB) that removes the need for HTML templates and templating engines.
+`paisy_ui` is a lightweight Python package (~42.6 KB) that removes the need for HTML templates or templating engines.
 By leveraging the excellent [DaisyUI](https://daisyui.com) component system, it makes UI construction intuitive, expressive, and Pythonic.
 
 ### Key features
 
 * **100% pure Python** — no Node.js, bundlers, or frontend tooling
-* **Component-based API** inspired by modern UI frameworks
+* **Component-based API** inspired by modern UI frameworks (React, Vue)
 * **Fully extensible** — create custom components with custom behavior
+* **Type-safe composition** — build complex UIs through component nesting
+* **Zero configuration** — works out of the box with `PUIHTML` wrapper
 * **Framework-agnostic** — works with:
 
   * FastAPI
@@ -32,6 +34,47 @@ By leveraging the excellent [DaisyUI](https://daisyui.com) component system, it 
 
 ```bash
 pip install paisy_ui
+```
+
+---
+
+## 🚀 Quick Start
+
+Get started in 3 steps:
+
+### 1. Import and create a page
+
+```python
+from paisy_ui.components import PUIHTML, PUIText, PUIButton
+
+page = PUIHTML()[
+    PUIText("Welcome to PaisyUI!"),
+    PUIButton().primary["Get Started"]
+]
+```
+
+### 2. Render to HTML
+
+```python
+print(page)  # Outputs complete HTML document
+```
+
+### 3. Use with your framework
+
+```python
+# FastAPI example
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+
+app = FastAPI()
+
+@app.get("/", response_class=HTMLResponse)
+def home():
+    page = PUIHTML()[
+        PUIText("Hello from FastAPI!"),
+        PUIButton().primary["Click me"]
+    ]
+    return str(page)
 ```
 
 ---
@@ -61,7 +104,29 @@ component = ComponentClass(*classes, **attributes)[
 ]
 ```
 
-> You don’t need a `PUIText` component for simple text — strings are rendered automatically.
+> You don't need a `PUIText` component for simple text — strings are rendered automatically.
+
+### Component Composition
+
+Components can be nested and composed freely:
+
+```python
+from paisy_ui.components import PUICard, PUIButton, PUIBadge
+
+card = PUICard()[
+    PUIBadge("New")["Featured"],
+    PUIButton().primary["Learn More"]
+]
+```
+
+### Property Chaining
+
+Many components support method chaining for styling:
+
+```python
+button = PUIButton().primary.lg.ghost["Click me"]
+# Applies multiple classes: btn-primary btn-lg btn-ghost
+```
 
 ---
 
@@ -197,82 +262,6 @@ Output (simplified):
 
 ---
 
-## 📦 Available Components
-
-PaisyUI is currently **under active development**, which means not all DaisyUI components are available out of the box yet.
-
-Below is the list of **currently implemented components**, along with their abstraction level and implementation status.
-
-### Legend
-
-* Components marked with `—` **will not be implemented** as built-in components
-* Components marked as **Work in progress** are planned for future releases
-* The **Contemplation** column indicates feature completeness and known limitations
-
----
-
-### 🧭 Components Overview
-
-| Category         | DaisyUI Component                                                    | PaisyUI Abstraction                              | Contemplation                                       |
-| ---------------- | -------------------------------------------------------------------- | ------------------------------------------------ | --------------------------------------------------- |
-| **Actions**      |                                                                      |                                                  |                                                     |
-|                  | [Button](https://daisyui.com/components/button/)                     | `PUIButton`                                      | ✅ 100%                                              |
-|                  | [Dropdown](https://daisyui.com/components/dropdown/)                 | —                                                | —                                                   |
-|                  | [FAB / Speed Dial](https://daisyui.com/components/fab/)              | —                                                | —                                                   |
-|                  | [Modal](https://daisyui.com/components/modal/)                       | `PUIModal`                                       | ✅ 100%                                              |
-|                  | [Swap](https://daisyui.com/components/swap/)                         | `PUISwap`                                        | ✅ 100%                                              |
-|                  | [Theme Controller](https://daisyui.com/components/theme-controller/) | `PUIThemeController`                             | ⚠️ 50% (*Icons cannot be changed*)                  |
-| **Data Display** |                                                                      |                                                  |                                                     |
-|                  | [Accordion](https://daisyui.com/components/accordion/)               | —                                                | —                                                   |
-|                  | [Avatar](https://daisyui.com/components/avatar/)                     | `PUIAvatar`                                      | ✅ 100%                                              |
-|                  | [Badge](https://daisyui.com/components/badge/)                       | `PUIBadge`                                       | ✅ 100%                                              |
-|                  | [Card](https://daisyui.com/components/card/)                         | `PUICard`                                        | ⚠️ 80% (*Figure outside `card-body` not supported*) |
-|                  | [Carousel](https://daisyui.com/components/carousel/)                 | `PUIImgCarousel`                                 | ⚠️ 50% (*Images only*)                              |
-|                  | [Chat](https://daisyui.com/components/chat/)                         | —                                                | —                                                   |
-|                  | [Collapse](https://daisyui.com/components/collapse/)                 | `PUICollapse`                                    | ✅ 100%                                              |
-|                  | [Countdown](https://daisyui.com/components/countdown/)               | `PUICountdown`                                   | ✅ 100%                                              |
-|                  | [Diff](https://daisyui.com/components/diff/)                         | —                                                | —                                                   |
-|                  | [Hover 3D Card](https://daisyui.com/components/hover-3d/)            | `PUIHover3dCard`, `PUIHover3dCardImg`            | ✅ 100%                                              |
-|                  | [Hover Gallery](https://daisyui.com/components/hover-gallery/)       | —                                                | —                                                   |
-|                  | [KBD](https://daisyui.com/components/kbd/)                           | `PUIKbd`                                         | ✅ 100%                                              |
-|                  | [List](https://daisyui.com/components/list/)                         | `PUIList`                                        | ✅ 100%                                              |
-|                  | [Stat](https://daisyui.com/components/stat/)                         | `PUIStat`                                        | ✅ 100%                                              |
-|                  | [Status](https://daisyui.com/components/status/)                     | `PUIStatus`                                      | ✅ 100%                                              |
-|                  | [Table](https://daisyui.com/components/table/)                       | `PUITable`                                       | ✅ 100%                                              |
-|                  | [Text Rotate](https://daisyui.com/components/text-rotate/)           | `PUITextRotate`                                  | ✅ 100%                                              |
-|                  | [Timeline](https://daisyui.com/components/timeline/)                 | —                                                | —                                                   |
-| **Navigation**   |                                                                      |                                                  |                                                     |
-|                  | *Work in progress*                                                   |                                                  |                                                     |
-| **Feedback**     |                                                                      |                                                  |                                                     |
-|                  | [Alert](https://daisyui.com/components/alert/)                       | `PUIAlert`                                       | ✅ 100%                                              |
-|                  | [Loading](https://daisyui.com/components/loading/)                   | `PUILoading`                                     | ✅ 100%                                              |
-|                  | [Progress](https://daisyui.com/components/progress/)                 | `PUIProgress`                                    | ✅ 100%                                              |
-|                  | [Radial Progress](https://daisyui.com/components/radial-progress/)   | `PUIRadialProgress`                              | ✅ 100%                                              |
-|                  | [Skeleton](https://daisyui.com/components/skeleton/)                 | Available via `ComponentClass().skeleton`        | ✅ 100%                                              |
-|                  | [Toast](https://daisyui.com/components/toast/)                       | `PUIToast`                                       | ✅ 100%                                              |
-|                  | [Tooltip](https://daisyui.com/components/tooltip/)                   | Available via `ComponentClass().tooltip("text")` | ✅ 100%                                              |
-| **Data Input**   |                                                                      |                                                  |                                                     |
-|                  | *Work in progress*                                                   |                                                  |                                                     |
-| **Layout**       |                                                                      |                                                  |                                                     |
-|                  | [Divider](https://daisyui.com/components/divider/)                   | `PUIDivider`                                     | ✅ 100%                                              |
-|                  | [Drawer / Sidebar](https://daisyui.com/components/drawer/)           | `PUISidebarLayout`                               | ⚠️ 20% (*Currently too limiting*)                   |
-|                  | *Work in progress*                                                   |                                                  |                                                     |
-| **Mockup**       |                                                                      |                                                  |                                                     |
-|                  | *Work in progress*                                                   |                                                  |                                                     |
-
----
-
-### 🧩 Notes
-
-* Components intentionally marked as **not implemented** can still be built easily using **custom components**
-* Feature limitations are documented explicitly to avoid surprises
-* The goal is **API stability over rushed coverage**
-
-More components will be added incrementally as the API matures 🌱
-
-
----
-
 ## 🎨 Styling & Variants
 
 ### CSS Classes
@@ -332,16 +321,161 @@ CustomComponent().primary["Bar"]
 
 ---
 
-## 🚀 Summary
+## 🎓 Next Steps
 
-**PaisyUI** lets you:
+Now that you understand the basics:
 
-* Build DaisyUI-powered interfaces
-* Stay entirely in Python
-* Avoid HTML templates and frontend build chains
-* Extend and compose UI components freely
+1. **Explore Components** — Check out the [Component Reference](#-component-reference) for all available components
+2. **Learn Advanced Patterns** — See [Advanced Usage](docs/advanced.md) for custom components and mixins
+3. **View Examples** — Browse the [Examples Gallery](examples/) for real-world use cases
+4. **Contribute** — Help improve PaisyUI by contributing components or documentation
 
-Perfect for backend-driven UIs, internal tools, dashboards, and rapid prototyping.
+### 📚 Documentation
+
+* [Component Reference](#-component-reference) — Complete list of all components
+* [Advanced Usage](docs/advanced.md) — Custom components, mixins, and patterns
+* [API Reference](docs/api.md) — Detailed API documentation
+* [Contributing Guide](CONTRIBUTING.md) — How to contribute to PaisyUI
+
+---
+
+## 📦 Component Reference
+
+PaisyUI is currently **under active development**, which means not all DaisyUI components are available yet.
+
+Below is the list of **currently implemented components**, along with their abstraction level and implementation status.
+
+### Legend
+
+* Components marked with `—` **will not be implemented** as built-in components
+* Components marked as **Work in progress** are planned for future releases
+* The **Status** column indicates feature completeness and known limitations
+
+---
+
+### 🧭 Components Overview
+
+| Category         | DaisyUI Component                                                    | PaisyUI Abstraction                              | Status                                              |
+| ---------------- | -------------------------------------------------------------------- | ------------------------------------------------ | --------------------------------------------------- |
+| **Actions**      |                                                                      |                                                  |                                                     |
+|                  | [Button](https://daisyui.com/components/button/)                     | `PUIButton`                                      | ✅ 100%                                              |
+|                  | [Dropdown](https://daisyui.com/components/dropdown/)                 | —                                                | —                                                   |
+|                  | [FAB / Speed Dial](https://daisyui.com/components/fab/)              | —                                                | —                                                   |
+|                  | [Modal](https://daisyui.com/components/modal/)                       | `PUIModal`                                       | ✅ 100%                                              |
+|                  | [Swap](https://daisyui.com/components/swap/)                         | `PUISwap`                                        | ✅ 100%                                              |
+|                  | [Theme Controller](https://daisyui.com/components/theme-controller/) | `PUIThemeController`                             | ⚠️ 50% (*Icons cannot be changed*)                  |
+| **Data Display** |                                                                      |                                                  |                                                     |
+|                  | [Accordion](https://daisyui.com/components/accordion/)               | —                                                | —                                                   |
+|                  | [Avatar](https://daisyui.com/components/avatar/)                     | `PUIAvatar`                                      | ✅ 100%                                              |
+|                  | [Badge](https://daisyui.com/components/badge/)                       | `PUIBadge`                                       | ✅ 100%                                              |
+|                  | [Card](https://daisyui.com/components/card/)                         | `PUICard`                                        | ⚠️ 80% (*Figure outside `card-body` not supported*) |
+|                  | [Carousel](https://daisyui.com/components/carousel/)                 | `PUIImgCarousel`                                 | ⚠️ 50% (*Images only*)                              |
+|                  | [Chat](https://daisyui.com/components/chat/)                         | —                                                | —                                                   |
+|                  | [Collapse](https://daisyui.com/components/collapse/)                 | `PUICollapse`                                    | ✅ 100%                                              |
+|                  | [Countdown](https://daisyui.com/components/countdown/)               | `PUICountdown`                                   | ✅ 100%                                              |
+|                  | [Diff](https://daisyui.com/components/diff/)                         | —                                                | —                                                   |
+|                  | [Hover 3D Card](https://daisyui.com/components/hover-3d/)            | `PUIHover3dCard`, `PUIHover3dCardImg`            | ✅ 100%                                              |
+|                  | [Hover Gallery](https://daisyui.com/components/hover-gallery/)       | —                                                | —                                                   |
+|                  | [KBD](https://daisyui.com/components/kbd/)                           | `PUIKbd`                                         | ✅ 100%                                              |
+|                  | [List](https://daisyui.com/components/list/)                         | `PUIList`                                        | ✅ 100%                                              |
+|                  | [Stat](https://daisyui.com/components/stat/)                         | `PUIStat`                                        | ✅ 100%                                              |
+|                  | [Status](https://daisyui.com/components/status/)                     | `PUIStatus`                                      | ✅ 100%                                              |
+|                  | [Table](https://daisyui.com/components/table/)                       | `PUITable`                                       | ✅ 100%                                              |
+|                  | [Text Rotate](https://daisyui.com/components/text-rotate/)           | `PUITextRotate`                                  | ✅ 100%                                              |
+|                  | [Timeline](https://daisyui.com/components/timeline/)                 | —                                                | —                                                   |
+| **Navigation**   |                                                                      |                                                  |                                                     |
+|                  | *Work in progress*                                                   |                                                  |                                                     |
+| **Feedback**     |                                                                      |                                                  |                                                     |
+|                  | [Alert](https://daisyui.com/components/alert/)                       | `PUIAlert`                                       | ✅ 100%                                              |
+|                  | [Loading](https://daisyui.com/components/loading/)                   | `PUILoading`                                     | ✅ 100%                                              |
+|                  | [Progress](https://daisyui.com/components/progress/)                 | `PUIProgress`                                    | ✅ 100%                                              |
+|                  | [Radial Progress](https://daisyui.com/components/radial-progress/)   | `PUIRadialProgress`                              | ✅ 100%                                              |
+|                  | [Skeleton](https://daisyui.com/components/skeleton/)                 | Available via `ComponentClass().skeleton`        | ✅ 100%                                              |
+|                  | [Toast](https://daisyui.com/components/toast/)                       | `PUIToast`                                       | ✅ 100%                                              |
+|                  | [Tooltip](https://daisyui.com/components/tooltip/)                   | Available via `ComponentClass().tooltip("text")` | ✅ 100%                                              |
+| **Data Input**   |                                                                      |                                                  |                                                     |
+|                  | [Checkbox](https://daisyui.com/components/checkbox/)                 | `PUICheckbox`                                    | ✅ 100%                                              |
+|                  | [File Input](https://daisyui.com/components/file-input/)             | `PUIFileInput`                                   | ✅ 100%                                              |
+|                  | [Filter](https://daisyui.com/components/filter/)                     | `PUIFilter`                                      | ✅ 100%                                              |
+|                  | [Radio](https://daisyui.com/components/radio/)                        | `PUIRadio`                                       | ✅ 100%                                              |
+|                  | [Range](https://daisyui.com/components/range/)                        | `PUIRange`                                       | ✅ 100%                                              |
+|                  | [Select](https://daisyui.com/components/select/)                      | `PUISelect`                                      | ✅ 100%                                              |
+|                  | [Text Input](https://daisyui.com/components/input/)                  | `PUITextInput`                                   | ✅ 100%                                              |
+|                  | [Date Input](https://daisyui.com/components/input/)                  | `PUIDateInput`                                   | ✅ 100%                                              |
+|                  | [Time Input](https://daisyui.com/components/input/)                  | `PUITimeInput`                                   | ✅ 100%                                              |
+|                  | [DateTime Local Input](https://daisyui.com/components/input/)        | `PUIDateTimeLocalInput`                          | ✅ 100%                                              |
+|                  | [Search Input](https://daisyui.com/components/input/)                | `PUISearchInput`                                 | ✅ 100%                                              |
+|                  | [Email Input](https://daisyui.com/components/input/)                 | `PUIEmailInput`                                  | ✅ 100%                                              |
+|                  | [Password Input](https://daisyui.com/components/input/)              | `PUIPasswordInput`                               | ✅ 100%                                              |
+|                  | [Number Input](https://daisyui.com/components/input/)                | `PUINumberInput`                                 | ✅ 100%                                              |
+|                  | [Telephone Input](https://daisyui.com/components/input/)             | `PUITelephoneInput`                              | ✅ 100%                                              |
+|                  | [URL Input](https://daisyui.com/components/input/)                    | `PUIUrlInput`                                    | ✅ 100%                                              |
+|                  | [Toggle](https://daisyui.com/components/toggle/)                     | `PUIToggle`                                      | ✅ 100%                                              |
+| **Layout**       |                                                                      |                                                  |                                                     |
+|                  | [Divider](https://daisyui.com/components/divider/)                   | `PUIDivider`                                     | ✅ 100%                                              |
+|                  | [Drawer / Sidebar](https://daisyui.com/components/drawer/)           | `PUISidebarLayout`                               | ⚠️ 20% (*Currently too limiting*)                   |
+|                  | *Work in progress*                                                   |                                                  |                                                     |
+| **Mockup**       |                                                                      |                                                  |                                                     |
+|                  | *Work in progress*                                                   |                                                  |                                                     |
+| **Base**         |                                                                      |                                                  |                                                     |
+|                  | *HTML wrapper*                                                       | `PUIHTML`                                        | ✅ 100%                                              |
+|                  | *Generic div*                                                         | `PUIDiv`                                         | ✅ 100%                                              |
+|                  | *Text/Paragraph*                                                      | `PUIText`                                        | ✅ 100%                                              |
+|                  | *Title/Heading*                                                       | `PUITitle`                                       | ✅ 100%                                              |
+|                  | *Image*                                                               | `PUIImg`                                         | ✅ 100%                                              |
+|                  | *Material Symbol*                                                     | `PUISymbol`                                      | ✅ 100%                                              |
+
+---
+
+### 🧩 Notes
+
+* Components intentionally marked as **not implemented** can still be built easily using **custom components**
+* Feature limitations are documented explicitly to avoid surprises
+* The goal is **API stability over rushed coverage**
+
+More components will be added incrementally as the API matures 🌱
+
+---
+
+## 🔮 Roadmap & Future Improvements
+
+PaisyUI is continuously evolving. Here's what we're planning:
+
+### 🎯 Short-term (v0.x)
+
+* **CLI Tool** — Generate HTML files from Python scripts
+* **Navigation Components** — Menu, Breadcrumbs, Pagination
+* **Mockup Components** — Phone, Browser, Code mockups
+* **Enhanced Modal** — More customization options
+* **Form Validation** — Built-in validation helpers
+* **Theme Customization** — Easier theme switching and customization
+
+### 🚀 Medium-term (v1.x)
+
+* **Type Hints** — Full type annotations for better IDE support
+* **Component Testing** — Testing utilities for components
+* **Performance Optimizations** — Lazy rendering and caching
+* **SSR Support** — Server-side rendering optimizations
+* **Component Library** — Community-contributed components
+* **Documentation Site** — Interactive documentation with live examples
+
+### 💡 Long-term (v2.x+)
+
+* **Component State Management** — Built-in state handling
+* **Event System** — Declarative event handling
+* **Build Tool** — Optimize and bundle HTML output
+* **Visual Builder** — GUI for building UIs
+* **Plugin System** — Extensible plugin architecture
+
+### 🤝 Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+**Priority Areas:**
+- Navigation components (Menu, Breadcrumbs)
+- Form validation helpers
+- More examples and documentation
+- Performance improvements
 
 ---
 

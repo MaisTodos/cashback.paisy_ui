@@ -3,12 +3,13 @@ from typing import Optional, Union
 
 from bs4 import Tag
 
+from .exceptions import PUIBuildError, PUIFindError
 from .utils import add_css, parse_attributes_dict, parse_html
 
 
 class PUIComponentABC(ABC):
     tag: Tag
-    wrapper: Optional[Tag] = None
+    _wrapper: Optional[Tag] = None
 
     def __init__(self, *classes, **attributes):
         raw_html = self.__doc__
@@ -18,7 +19,7 @@ class PUIComponentABC(ABC):
             )
         tag, wrapper = parse_html(raw_html)
         self.tag = tag
-        self.wrapper = wrapper
+        self._wrapper = wrapper
         attrs = parse_attributes_dict(attributes=attributes)
         self.tag.attrs.update(**attrs)
         self.css(*classes)
@@ -27,8 +28,8 @@ class PUIComponentABC(ABC):
         return self.tag.prettify(formatter="html5")
 
     def _append(self, child: Union[str, "Tag"]):
-        if self.wrapper is not None:
-            self.wrapper.append(child)
+        if self._wrapper is not None:
+            self._wrapper.append(child)
         else:
             self.tag.append(child)
 
@@ -59,6 +60,18 @@ class PUIComponentABC(ABC):
     def css(self, *classes):
         add_css(self.tag, *classes)
         return self
+
+    def find(self, tag_name: Optional[str] = None, attrs: Optional[dict] = None) -> Tag:
+        tag = self.tag.find(name=tag_name, attrs=attrs if attrs else dict())
+        if not tag:
+            raise PUIFindError(f"{self} - {tag_name} ({attrs})")
+        return tag
+
+    @property
+    def wrapper(self):
+        if not self._wrapper:
+            raise PUIBuildError(f"{self}.wrapper")
+        return self._wrapper
 
     @property
     def skeleton(self):
