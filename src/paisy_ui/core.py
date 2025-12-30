@@ -27,7 +27,7 @@ class PUIComponentABC(ABC):
     def __str__(self) -> str:
         return self.tag.prettify(formatter="html5")
 
-    def _append(self, child: Union[str, "Tag"]):
+    def _append(self, child: Union[str, "Tag"]) -> None:
         if self._wrapper is not None:
             self._wrapper.append(child)
         else:
@@ -36,9 +36,7 @@ class PUIComponentABC(ABC):
     def _format_child(self, child: Union[str, int, float, "PUIComponentABC"]) -> Tag:
         if isinstance(child, PUIComponentABC):
             return child.tag
-        elif (
-            isinstance(child, str) or isinstance(child, int) or isinstance(child, float)
-        ):
+        elif isinstance(child, (str, int, float)):
             tag, _ = parse_html(f"<span>{child}</span>")
             return tag
         else:
@@ -47,7 +45,7 @@ class PUIComponentABC(ABC):
     def append(self, child: Union[str, int, float, "PUIComponentABC"]):
         self._append(self._format_child(child=child))
 
-    def __getitem__(self, children):
+    def __getitem__(self, children: Union[tuple, str, int, float, "PUIComponentABC"]) -> "PUIComponentABC":
         if isinstance(children, tuple):
             _children = children
         else:
@@ -57,33 +55,33 @@ class PUIComponentABC(ABC):
             self.append(child)
         return self
 
-    def css(self, *classes):
+    def css(self, *classes: str) -> "PUIComponentABC":
         add_css(self.tag, *classes)
         return self
 
     def find(self, tag_name: Optional[str] = None, attrs: Optional[dict] = None) -> Tag:
-        tag = self.tag.find(name=tag_name, attrs=attrs if attrs else dict())
+        tag = self.tag.find(name=tag_name, attrs=attrs if attrs else {})
         if not tag:
             raise PUIFindError(f"{self} - {tag_name} ({attrs})")
         return tag
 
     @property
-    def wrapper(self):
-        if not self._wrapper:
+    def wrapper(self) -> Tag:
+        if self._wrapper is None:
             raise PUIBuildError(f"{self}.wrapper")
         return self._wrapper
 
     @property
-    def skeleton(self):
+    def skeleton(self) -> "PUIComponentABC":
         self.css("skeleton")
         return self
 
     @property
-    def skeleton_text(self):
+    def skeleton_text(self) -> "PUIComponentABC":
         self.css("skeleton", "skeleton-text")
         return self
 
-    def tooltip(self, content: str):
+    def tooltip(self, content: str) -> "PUIComponentABC":
         add_css(self.tag, "tooltip")
         self.tag.attrs.update(**{"data-tip": content})
         return self

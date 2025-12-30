@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from ..core import PUIComponentABC, Tag
 from ..exceptions import PUIFindError
-from ..mixins import PUIBorderMixin, PUILayoutMixin, PUIVariantMixin
+from ..mixins import PUIBorderMixin, PUILayoutMixin, PUITextColorMixin, PUIVariantMixin
 from ..utils import add_css, generate_unique_id, parse_html
 from .base import PUISymbol
 
@@ -162,7 +162,7 @@ class PUICountdown(PUIComponentABC):
     def __init__(
         self, *classes, values: List[Value], id: Optional[str] = None, **attributes
     ):
-        id = id if id else generate_unique_id()
+        id = id or generate_unique_id()
         attributes.update(id=id)
         super().__init__(*classes, **attributes)
         for value in values:
@@ -361,7 +361,7 @@ class PUITable(PUIComponentABC):
         self.wrapper.append(tbody)
 
 
-class PUITextRotate(PUIComponentABC):
+class PUITextRotate(PUIComponentABC, PUITextColorMixin):
     """<span class="text-rotate text-7xl leading-[2]"><span class="justify-items-center">[[content]]</span></span>"""
 
 

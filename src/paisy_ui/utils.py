@@ -2,10 +2,13 @@ from typing import Optional, Tuple
 from uuid import NAMESPACE_DNS, uuid4, uuid5
 
 from bs4 import BeautifulSoup, Tag
+from bs4.element import NavigableString
+
+from .exceptions import PUIBuildError
 
 
 def generate_unique_id(name: Optional[str] = None):
-    name = name if name else str(uuid4())
+    name = name or str(uuid4())
     return str(uuid5(NAMESPACE_DNS, name)).replace("-", "")
 
 
@@ -17,14 +20,27 @@ def parse_html(
     raw_html = "".join(
         f"{'\n' if use_line_break else ''}{s.strip()}" for s in raw_html.split("\n")
     ).strip()
-    tag: Tag = BeautifulSoup(raw_html.strip("\n"), "html.parser").contents[0]  # type: ignore
+    soup = BeautifulSoup(raw_html.strip("\n"), "html.parser")
+    if not soup.contents:
+        raise PUIBuildError("Empty HTML")
+
+    first_element = soup.contents[0]
+    if not isinstance(first_element, Tag):
+        raise PUIBuildError(f"Tag expected (reveiced {type(first_element)})")
+
+    tag: Tag = first_element
 
     wrapper: Optional[Tag] = None
-    wrapper = tag.find(string=wrapper_content_indicator)  # type: ignore
-    if wrapper:
-        parent = wrapper.parent
-        wrapper.replace_with("")
-        wrapper = parent
+    wrapper_element = tag.find(string=wrapper_content_indicator)
+    if wrapper_element:
+        if not isinstance(wrapper_element, NavigableString):
+            raise PUIBuildError(
+                f"NavigableString expected (received {type(wrapper_element)})"
+            )
+        parent = wrapper_element.parent
+        if parent and isinstance(parent, Tag):
+            wrapper_element.replace_with("")
+            wrapper = parent
 
     return tag, wrapper
 
@@ -43,5 +59,5 @@ def parse_attributes_dict(attributes: Optional[dict] = None) -> dict:
     return (
         {key.strip("_").replace("_", "-"): value for key, value in attributes.items()}
         if attributes
-        else dict()
+        else {}
     )

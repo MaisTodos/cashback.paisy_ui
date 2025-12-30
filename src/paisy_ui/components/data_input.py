@@ -60,7 +60,7 @@ class PUIInputABC(PUIComponentABC):
         else:
             add_css(_label, "validator", "w-full")
 
-        if not self._input_type in ["range", "checkbox", "radio", "file"]:
+        if self._input_type not in ("range", "checkbox", "radio", "file"):
             add_css(_input if label else _label, "input")
 
         self.tag.append(_label)
@@ -186,8 +186,8 @@ class PUISelect(PUIComponentABC):
         name: str,
         id: str,
         options: List[str],
-        label: str | None = None,
-        legend: str | None = None,
+        label: Optional[str] = None,
+        legend: Optional[str] = None,
         **attributes,
     ):
         super().__init__(*classes, **attributes)
@@ -232,11 +232,11 @@ class PUITextInput(PUIInputABC, PUIVariantMixin):
         *classes,
         name: str,
         id: str,
-        datalist: List[str] = [],
+        datalist: Optional[List[str]] = None,
         pattern: Optional[str] = None,
         validator_hint: Optional[str] = None,
-        label: str | None = None,
-        legend: str | None = None,
+        label: Optional[str] = None,
+        legend: Optional[str] = None,
         **attributes,
     ):
         super().__init__(

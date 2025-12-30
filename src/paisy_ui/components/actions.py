@@ -84,8 +84,6 @@ class PUISwap(PUIComponentABC, PUITextSizeMixin):
         off: Union[str, PUIComponentABC],
         **attributes
     ):
-        self.on = Tag
-        self.off = Tag
         super().__init__(*classes, **attributes)
         div_on = self.find(attrs={"class": "swap-on"})
         div_off = self.find(attrs={"class": "swap-off"})
